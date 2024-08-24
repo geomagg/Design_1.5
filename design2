@@ -392,6 +392,9 @@ def rnodes():
 ## sys.stdout = writer
 #-----------------------------------------------
  global NodeArea
+# global GridNodes
+# global nnx, nny
+
  NodeArea=PO.getarea()
  print ('     ')
  print ('Node Poligons -------------------------------')
@@ -406,6 +409,7 @@ def rnodes():
  global XX,YY
  global NumberofNodes
  global NumberofNodeLines
+ global LineNumber, NodeNumber , FNL , LNL
 
  XX,YY=[],[]
  rangex=rngx.get()
@@ -428,73 +432,72 @@ def rnodes():
  fspsr = open("SPS.r", 'w')
 
  XX,YY=[],[]
+
  o1=ort.get()
+
  CQ=Grid(x0,y0,dx,dy,nx,ny,angle,angle1,stagger,o1)
+
  x= CQ.getarrx()
  y= CQ.getarry()
  nnx= CQ.getnnx() 
  nny= CQ.getnny()  
 
  f.write("%s\n" % 'x y s l')
+
  NumberofNodes=0
  NumberofNodeLines=0
  ntotal=len(x)
+
 ###
  a=PB(400,20)
  a.settitle("Nodes Computation")
  a.open()
-###
  upt=0
  progress=1./ntotal
+###
 
+ LineNumber=[]
+ NodeNumber=[]
+ FNL=[]
+ LNL=[]
+ savenode =0
  for k in range(0,nny):
-  
 ###
    a.update(upt)
 ###
-   flagline=0
-   flagnode=0 
-   NumberofNodesPerLine=0
 
+   flagline = 0
+   flagnode = 0
+   
    for l in range(0,nnx):
      aa= poly.contains(Point([float(x[k][l]),float(y[k][l])])) ####2
      bb= ring.contains(Point([float(x[k][l]),float(y[k][l])]))  ### Inclui os nodes on the polygon boundary
      if aa or bb:
-      NumberofNodes+=1
+      NumberofNodes+=1     # count all nodes in and on the node polygon
       XX.append(float(x[k][l]))
       YY.append(float(y[k][l]))
       aax=x[k][l]
       aay=y[k][l]
+# FOCA
       if flagnode==0:
-         NumberofNodesPerLine+=1
-         LastStation=l
+         LineNumber.append(k)
+         FNL.append(l)
       if flagline==0:
-         NumberofNodeLines=k
-         FirstStation=l
-         flagline=1
-
-###1
+        if flagnode==0:    #skiping the 1st node - no last node saved yet
+          if  savenode!=0:
+             LNL.append(savenode)
       f.write("%7.2f %7.2f %i %i\n" % (aax,aay,k,l))
-
-#        Writing  SPS r
-##     if varspsr.get() ==1:
-##           line_new = '%1s%10.2f%10.2f%2s%1i%2s%4i%4.1f%4i%2i%6.1f%9.1f%10.1f%6.1f%3i%6i\n'\
-##                   % ("R",float(k),float(l),"  ",1,"ND",0,30.\
-##                    ,7777,0,30,aax,aay,-30,365,235959)
-##           fspsr.write( line_new)
-##   flagnode=1
-##   if flagnode==1 and flagline==1:
-##     f1.write("%2i %2i %2i %2i %5.2f\n" % (NumberofNodeLines,FirstStation, LastStation, NumberofNodesPerLine,(NumberofNodesPerLine-1)*(dx/1000.)))
-##     f1.write("%i %i %i %i %f\n" % (NumberofNodeLines,FirstStation, LastStation, NumberofNodesPerLine,(NumberofNodesPerLine-1)*(dx/1000.)))
-
+      flagnode = 1   # Stops in the 1st node of the line
+      savenode = l   #  Saving the last node  
+   flagline = 1      # Stops  in the end node  of each line
    upt=upt+progress
+ LNL.append(savenode)
  f1.close()
  f.close()
+
 ###
  a.close()
 ###
-## if NumberofNodes ==0:
-##  messagebox.showinfo("Information","Check x0 and y0")
 
  print ('Node grid ----------------------------')
  if v.get() == 1:
@@ -505,23 +508,14 @@ def rnodes():
  if v.get() ==2:
   print ('Rectangular grid')
 
- print ('Total number of nodes=', NumberofNodes)
- print ('Total number of node lines=', NumberofNodeLines)
- print ('Total KM of nodes=', (NumberofNodes-NumberofNodeLines)*(dx/1000.))
- print ('Average number of nodes / line=', NumberofNodes/NumberofNodeLines)
- print ('Average Km / Line =', ((NumberofNodes-NumberofNodeLines)*(dx/1000))/NumberofNodeLines)
- print ('Total time of node deployment' , (NumberofNodes-NumberofNodeLines-1)*(dx/1000)/(velnode.get()*1.852), 'days')
- print ('          ')
+#----------------------------------------------------------------------------------
 
-
-
-#------------------Shot Grid Generation -----------------------------------
+#------------------Shot Grid Generation -------------------------------------------
 #
 def rshots():
 
  X3=[]
 
-#PORRA
  global x0a,y0a,x0b,y0b
  global XXgrid,YYgrid
  global xp3,yp3
@@ -543,7 +537,7 @@ def rshots():
      reader = csv.reader(f2, delimiter=' ')
      next(reader)
      for row in reader:
-      xp3.append(float(row[0]))  ###3
+      xp3.append(float(row[0]))  
       yp3.append(float(row[1]))
   e.write("%s %s\n" % ("x","y"))
   for i in range (0,len(xp3)):
@@ -582,7 +576,8 @@ def rshots():
  print ('Shot polygon (SQ Km)', s.area/1000000)
 
 #------------------Sail(Shot) Line Grid ------------------
-
+#  Grid is based on shot arrays  configuration 
+#
  LLgrid,PPgrid=[],[]
  XXgrid,YYgrid=[],[]
  LINgrid,PTNgrid=[],[]
@@ -597,7 +592,7 @@ def rshots():
  ##RecordLength=DesiredRecordLength.get()
  nsources = Nsources.get()
  anglea = anglexa.get()
- angleb=anglea  ######
+ angleb=anglea  
  o1=ort1.get()
  ang = anglea*np.pi/180.
  stagger = 0
@@ -610,12 +605,11 @@ def rshots():
  if nsources==2:
     dxb=dxa/2
     dyb=dya/2
- if nsources==3:      
+ if nsources==3:
     dxb=dxa/2
-    dyb=dya 
+    dyb=dya
  nxb=int(rangexa/dxb)
  nyb=int(rangeya/dyb)
-
 
  CQgrid=Grid(x0a,y0a,dxb,dyb,nxb,nyb,anglea,angleb,stagger,o1)
 
@@ -623,7 +617,6 @@ def rshots():
  nny=    CQgrid.getnny()
  xgrid=  CQgrid.getarrx()
  ygrid=  CQgrid.getarry()
-
 
  grid = open('grid.txt', 'w')
  sht =   open('shots.txt', 'w')
@@ -639,10 +632,9 @@ def rshots():
  upt=0
  progress=1./ntotal
 
-#  Single source ---------------------------------
-
- SailLineInterval = dya
- SailPointInterval = dyb
+#UBA1
+ SailLineInterval = dya    # Adjascent arrays separation.  
+ SailPointInterval = dyb   # pop interval
  FirstSailLine = 1
  FirstSailLineNumber = 1000
  SailLineIntervalIdx = 1 #int(dya/dyb)
@@ -659,8 +651,6 @@ def rshots():
           grid.write("%7.2f %7.2f %2i %2i\n" % (xgrid[GridLine][GridPoint],ygrid[GridLine][GridPoint],GridLine,GridPoint))
     upt=upt+progress
  a.close()
-
-#PORRA3
 
  A=LLgrid[-1] 
  B=LLgrid[0]
@@ -840,7 +830,7 @@ def planout ():
  book = xlwt.Workbook(encoding="utf-8")
 
  sheet0 = book.add_sheet("Parameters")
- sheet1 = book.add_sheet("Receivers")
+ sheet1 = book.add_sheet("Nodes")
  sheet2 = book.add_sheet("Shots")
  sheet3 = book.add_sheet("Nodes_polygon")
  sheet4 = book.add_sheet("Shots_polygon")
@@ -897,33 +887,71 @@ def planout ():
  sheet0.write(26,5, "      ",style6)
  sheet0.write(26,6, "      ",style6a)
 
+# Nodes ------------------------------------------------------------------------
+ numnodesline=[]
+ kmline=[]
+ dx = float(nodex.get())/1000.
+ nodevel = float(velnode.get())*1.852
+ for i in range(len(LNL)):
+   element = LNL[i]-FNL[i]+1
+   numnodesline.append(float(element))
+   kmline.append((element-1)*dx)
 
-# for i in range(11,22):
-#   sheet0.write(i,3, "   ",style4)
+ if v.get() == 1:
+  geometry ='Alternated'
+  apothema = nodex.get()
+ if v.get() == 0:
+  geometry ='Hexagonal'
+  apothema = round((nodex.get()/2)*math.sqrt(3),2)
+ if v.get() == 2:
+  geometry ='Rectangular grid'
+  apothema = nodex.get()
 
-# Nodes
- sheet0.write(10,0, "Node Line Interval (m):",style4)
- sheet0.write(11,0, "Node Interval (m):",style4)
- sheet0.write(12,0, "Number of nodes:",style4)
- sheet0.write(13,0, "Number of lines:",style4)
- sheet0.write(14,0, "Total line length (Km):",style4)
- sheet0.write(15,0, "Average line length (Km):",style4)
- sheet0.write(16,0, "Station density /SQKm:",style4)
- sheet0.write(17,0, "Min nodes /line:",style4)
- sheet0.write(18,0, "Max nodes /line:",style4)
- sheet0.write(19,0, "Line direction:",style4)
- sheet0.write(20,0, "Receiver area sqKm:",style4)
 
- sheet0.write(10,2,  float(nodex.get()),style4b)
- sheet0.write(11,2, float(nodey.get()),style4b)
- sheet0.write(12,2, NumberofNodes,style4b)
- sheet0.write(13,2, NumberofNodeLines,style4b)
- sheet0.write(14,2, round((NumberofNodes-NumberofNodeLines)*(nodex.get()/1000.),2),style4b) ###5
- sheet0.write(15,2, round((NumberofNodes-NumberofNodeLines)*(nodex.get()/1000.)/NumberofNodeLines,2),style4b)
- sheet0.write(16,2, round(NumberofNodes/NodeArea,2),style4b)
+ sheet0.write(10,0, "Node Line Interval (m):",style4)                       # A11
+ sheet0.write(10,2, float(nodex.get()),style4b)                             # C11
 
- sheet0.write(19,2, 90.-float(anglex.get()),style4b)
- sheet0.write(20,2, round(NodeArea,2),style4b)
+ sheet0.write(11,0, "Node Interval (m):",style4)                            # A12
+ sheet0.write(11,2, float(nodey.get()),style4b)                             # C12
+
+ sheet0.write(12,0, "Number of nodes:",style4 )                             # A13
+ sheet0.write(12,2, sum(numnodesline),style4b)                              # C13
+
+ sheet0.write(13,0, "Number of lines:",style4)                              # A14
+ sheet0.write(13,2, len(LineNumber),style4b)                                # C14
+
+ sheet0.write(14,0, "Total line length (Km):",style4)                       # A15
+ sheet0.write(14,2, sum(kmline),style4b)                                    # C15
+
+ sheet0.write(15,0, "Average line length (Km):",style4)                     # A16
+ sheet0.write(15,2, round(sum(kmline)/len(kmline),2),style4b)               # C16
+
+ sheet0.write(16,0, "Nodes density /sqKm:",style4)                          # A17
+ sheet0.write(16,2, round(sum(numnodesline)/NodeArea,2),style4b)            # C17
+
+ sheet0.write(17,0, "Avg nodes /line:",style4)                              # A18
+ sheet0.write(17,2, round(sum(numnodesline)/len(LineNumber),1) ,style4b)    # C18
+
+ sheet0.write(18,0, "Max nodes in line:",style4)                            # A19
+ sheet0.write(18,2, max(numnodesline) ,style4b)                             # C19
+ 
+ sheet0.write(19,0, "Min nodes in line:",style4)                            # A20
+ sheet0.write(19,2,min(numnodesline) ,style4b)                              # C20
+
+ sheet0.write(20,0, "Line direction:",style4)                               # A21
+ sheet0.write(20,2, 90.-float(anglex.get()),style4b)                        # C21
+
+ sheet0.write(21,0, "Nodes area sqKm:",style4)                              # A22
+ sheet0.write(21,2, round(NodeArea,2),style4b)                              # C22
+
+ sheet0.write(22,0, "Geometry",style4)                                      # A23
+ sheet0.write(22,2, geometry,style4b)                                       # C23
+
+ sheet0.write(23,0, "Aphotema",style4)                                      # A23
+ sheet0.write(23,2, apothema,style4b)                                       # C23
+
+#--------------------------------------------------------------------------------
+
 
 #Shots
  sheet0.write(10,4, "Sail Line Interval (m):        ",style4)
@@ -963,16 +991,49 @@ def planout ():
  sheet0.write(22,6, round(TotalShootTimeDays,2),style4b)
  sheet0.write(23,6, round(ShotsPerKm2,2),style4b)
 
+# Sheet 1  Nodes and Nodes Lines
+
+ sheet1.write(0,0, "Line",style6)
+ sheet1.write(0,1, "LineNum",style6)
+ sheet1.write(0,2, "1st Node ",style6)
+ sheet1.write(0,3, "Lst Node ",style6)
+ sheet1.write(0,4, "# Nodes",style6)
+ sheet1.write(0,5, "Line-Km",style6)
+ sheet1.write(0,6, "Line-Time",style6)
 
 
 
-# Sheet 1
+#FOCA1
+ nodevel = float(velnode.get())*1.852
+ row =1
+ for Inode in range(0,len(LineNumber)):
+         sheet1.write(row,0,Inode+1,style4b)
+         sheet1.write(row,1,LineNumber[Inode],style4b)
+         sheet1.write(row,2,FNL[Inode],style4b)
+         sheet1.write(row,3,LNL[Inode],style4b)
+         sheet1.write(row,4,LNL[Inode]-FNL[Inode]+1,style4b)
+         sheet1.write(row,5,(LNL[Inode]-FNL[Inode])*dx,style4b)
+         sheet1.write(row,6,(LNL[Inode]-FNL[Inode])*(dx/nodevel),style4b)
 
-# sheet1.write(0,0, "Line_#",style)
-# sheet1.write(0,1, "BOL_STN_#",style)
-# sheet1.write(0,2, "EOL_STN_#",style)
-# sheet1.write(0,3, "# of Stations",style)
-# sheet1.write(0,4, "Line Km",style)
+         row+=1
+
+ sheet1.write(row,0, "",style6)
+ sheet1.write(row,1, "",style6)
+ sheet1.write(row,2, "",style6)
+ sheet1.write(row,3, "",style6)
+ sheet1.write(row,4, "",style6)
+ sheet1.write(row,5, "",style6)
+ sheet1.write(row,6, "",style6)
+ 
+
+
+
+# sheet1.write(row+4,3,float(velnode.get())*1.852,style4b)
+
+
+
+
+
 # sheet1.write(0,5, "Navtime hrs",style)
 
 
@@ -1038,6 +1099,8 @@ def planout ():
 ##    D=s.join(seqD)
 ##    E=s.join(seqE)
 ##    F=s.join(seqF)
+
+#FOCA2
 
 ## sheet1.write(len(n1)+1, 0, xlwt.Formula(A),style)
 ## sheet1.write(len(n1)+1, 1, xlwt.Formula(B),style1)
