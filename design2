@@ -499,17 +499,6 @@ def rnodes():
  a.close()
 ###
 
- print ('Node grid ----------------------------')
- if v.get() == 1:
-  print ('Nodes Alternated')
- if v.get() == 0:
-  print ('Nodes Hexagonal')
-  print (' ATTENTION Node line space reduced to apothem:', (dx/2)*math.sqrt(3))
- if v.get() ==2:
-  print ('Rectangular grid')
-
-#----------------------------------------------------------------------------------
-
 #------------------Shot Grid Generation -------------------------------------------
 #
 def rshots():
@@ -530,7 +519,7 @@ def rshots():
  xp3,yp3=[],[]
 
 # Check which source polygon to be used
-#
+
  if tkvar.get()== 'ProvidedPolygon' :
   e=open('polshot.txt','w')
   with open('pol3.txt','r') as f2:
@@ -633,7 +622,7 @@ def rshots():
  progress=1./ntotal
 
 #UBA1
- SailLineInterval = dya    # Adjascent arrays separation.  
+ SailLineInterval = dya    # Adjascent arrays separation. 
  SailPointInterval = dyb   # pop interval
  FirstSailLine = 1
  FirstSailLineNumber = 1000
@@ -652,7 +641,7 @@ def rshots():
     upt=upt+progress
  a.close()
 
- A=LLgrid[-1] 
+ A=LLgrid[-1]
  B=LLgrid[0]
  ny= A[0]-B[0]+1
  nx= A[1]-B[1]+1
@@ -664,6 +653,9 @@ def rshots():
  GRIDPT=np.reshape((np.asarray(PTNgrid)),(ny,nx))
  print("GRIDXX,GRIDYY,GRIDLN,GRIDPT", GRIDXX.shape,GRIDYY.shape,GRIDLN.shape,GRIDPT.shape)
  
+# FOCA0
+ print  ("CARALHO PORRA", GRIDLN[0][0],GRIDLN[-1][-1])
+
  ntotal=len(XXgrid)
  a=PB(400,20)
  a.settitle("Sail lines Computation")
@@ -738,15 +730,6 @@ def rshots():
 
  a.close()
 
-#     Writing  SPS s
-#    if varspss.get() ==1:
-#           line_new = '%1s%10.2f%10.2f%2s%1i%2s%4i%4.1f%4i%2i%6.1f%9.1f%10.1f%6.1f%3i%6i\n'\
-#                    % ("R",float(k),float(l),"  ",1,"ND",0,30.\
-#                    ,7777,0,30,xsail[k][l],ysail[k][l],-30,365,235959)
-#           fspss.write( line_new)
-
-
-
 
 ## if NumberofShotPoints ==0:
 ##  messagebox.showinfo("Information","Check x0 and y0")
@@ -799,22 +782,7 @@ def rshots():
  grid.close()
  sail.close()
  sht.close()
- fold()
  planout()
-
-#------------------------------------------------------------------------------------------------- 
-def fold():
-
-   global FoldOffset, FoldCount
-
-   FoldOffset = []
-   FoldCount = []
-
-   print (MaxOff.get())
-   OffInt=MaxOff.get()/20.
-   for  i in  range(0,21):
-      FoldOffset.append ( float(i*OffInt))
-      FoldCount.append ( (FoldOffset[i]/(nodex.get()*2)) * (FoldOffset[i]/(nodey.get()*2))*math.pi)
 
 #--------------------------------------------------------------------------------------------------
 def planout ():
@@ -831,8 +799,8 @@ def planout ():
 
  sheet0 = book.add_sheet("Parameters")
  sheet1 = book.add_sheet("Nodes")
- sheet2 = book.add_sheet("Shots")
- sheet3 = book.add_sheet("Nodes_polygon")
+ sheet2 = book.add_sheet("Nodes_Polygon")
+ sheet3 = book.add_sheet("Shots")
  sheet4 = book.add_sheet("Shots_polygon")
  sheet5 = book.add_sheet("Fold x Offset")
 
@@ -844,11 +812,14 @@ def planout ():
  style4a= xlwt.easyxf(' font: bold on , height 220;')
  style4= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour white ;')
  style4b= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour ivory ;')
+ style4c= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour light-blue ;')
  style5= xlwt.easyxf('font: name Arial, bold on; borders: left thick,  right thick,top thick, bottom thick;  pattern: pattern solid, fore_colour light-blue ')
  style6= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium;  pattern: pattern solid, fore_colour light-orange ')
  style6a= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium, right medium;  pattern: pattern solid, fore_colour light-orange ')
  style6b= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium, left medium;  pattern: pattern solid, fore_colour light-orange ')
-
+ style7= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium;  pattern: pattern solid, fore_colour light-blue ')
+ style7a= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium, right medium;  pattern: pattern solid, fore_colour light-blue ')
+ style7b= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium, left medium;  pattern: pattern solid, fore_colour light-blue ')
  style8= xlwt.easyxf(' font: bold off , height 140;')
 
 # sheet0.insert_bitmap('geomagg3.png',0,0)
@@ -871,7 +842,6 @@ def planout ():
  sheet0.write(8,4, "Shots      ",style6)
  sheet0.write(8,5, "      ",style6)
  sheet0.write(8,6, "      ",style6a)
-
 
  sheet0.write(2,0, ProjName.get(),style4a)
  sheet0.write(4,0, Co.get(),style4a)
@@ -904,9 +874,12 @@ def planout ():
   geometry ='Hexagonal'
   apothema = round((nodex.get()/2)*math.sqrt(3),2)
  if v.get() == 2:
-  geometry ='Rectangular grid'
+  geometry ='Rectangular'
   apothema = nodex.get()
 
+# Sheet 0 
+
+# Nodes
 
  sheet0.write(10,0, "Node Line Interval (m):",style4)                       # A11
  sheet0.write(10,2, float(nodex.get()),style4b)                             # C11
@@ -950,46 +923,61 @@ def planout ():
  sheet0.write(23,0, "Aphotema",style4)                                      # A23
  sheet0.write(23,2, apothema,style4b)                                       # C23
 
-#--------------------------------------------------------------------------------
-
 
 #Shots
- sheet0.write(10,4, "Sail Line Interval (m):        ",style4)
- sheet0.write(11,4, "Shot Interval (m):",style4)
- sheet0.write(12,4, "Bin size - X (m):",style4)
- sheet0.write(13,4, "Bin size - Y (m):",style4)
- sheet0.write(14,4, "Number of shots:",style4)
- sheet0.write(15,4, "Number of shot lines:",style4)
- sheet0.write(16,4, "Number of sail lines:",style4)
- sheet0.write(17,4, "Average length of the Sail Line (Km):",style4)
- sheet0.write(18,4, "Average length of the Shot Line (Km):",style4)
- sheet0.write(19,4, "Total length of the Sail Lines (Km):",style4)
- sheet0.write(20,4, "Total length of the Shot Lines (Km):",style4)
- sheet0.write(21,4, "Total shooting time without line change (hours)':",style4)
- sheet0.write(22,4, "Total shooting time without line change (days)':",style4)
- sheet0.write(23,4, "Shot density /SQKm:",style4)
+
+ nsources = Nsources.get()
+ dxa=shotx.get()
+ dya=shoty.get()
+
+ sheet0.write(10,4, "SailLine Int (m):",style4)                             # E11
+ sheet0.write(10,6, float(nsources*dya),style4b)                            # G11
+
+ sheet0.write(11,4, "Shot Int (m):",style4)                                 # E12
+ sheet0.write(11,6, float(dxa),style4b)                                     # G12
+
+ sheet0.write(12,4, "Bin X (m):",style4)                                    # E13
+ sheet0.write(12,6, float(dxa/2),style4b)                                   # G13
+
+ sheet0.write(13,4, "Bin Y (m):",style4)                                    # E14
+ sheet0.write(13,6, float(dya/2),style4b)                                   # G14
+
+ sheet0.write(14,4, "Number of shots:",style4)                              # E15
+ sheet0.write(14,6, NumberofShotPoints,style4b)                             # G15
+
+ sheet0.write(15,4, "Number of shot lines:",style4)                         # E16
+ sheet0.write(15,6, NumberofShotLines,style4b)                              # G16
+
+ sheet0.write(16,4, "Number of sail lines:",style4)                         # E17
+ sheet0.write(16,6, NumberofSailLines,style4b)                              # G17
+
+ sheet0.write(17,4, "Average Km Sail Line:",style4)                         # E18
+ sheet0.write(17,6, AvSailKm_1,style4b)                                     # G18
+
+ sheet0.write(18,4, "Average Km Shot Line:",style4)                         # E19
+ sheet0.write(18,6, AvShotKm_1,style4b)                                     # G19
+
+ sheet0.write(19,4, "Sail Lines (Km):",style4)                              # E20
+ sheet0.write(19,6, LinearSailKm,style4b)                                   # G20
+
+ sheet0.write(20,4, "Shot Lines (Km):",style4)                              # E21
+ sheet0.write(20,6, LinearShotKm,style4b)                                   # G21
+
+ sheet0.write(21,4, "Shot hour without line chg:",style4)                   # E22
+ sheet0.write(21,6, round(TotalShootTimeHours,2),style4b)                   # G22
+
+ sheet0.write(22,4, "Shot days without line chg:",style4)                   # E23
+ sheet0.write(22,6, round(TotalShootTimeDays,2),style4b)                    # G23
+
+ sheet0.write(23,4, "Shot density /SQKm:",style4)                           # E24
+ sheet0.write(23,6, round(ShotsPerKm2,2),style4b)                           # G24
+
 # sheet0.write(17,4, "Min shots /line:",style4)
 # sheet0.write(18,4, "Max shots /line:",style4)
 # sheet0.write(19,4, "Line direction:",style4)
 # sheet0.write(20,4, "Shot area sqKm:",style4)
-# sheet0.write(22,4, "Shotline chg time (hrs):",style4)
-# sheet0.write(23,4, "Shotline total days:",style4)
 
 #
- sheet0.write(10,6, float(nsources*dya),style4b)
- sheet0.write(11,6, float(dxa),style4b)
- sheet0.write(12,6, float(dxa/2),style4b)
- sheet0.write(13,6, float(dya/2),style4b)
- sheet0.write(14,6, NumberofShotPoints,style4b)
- sheet0.write(15,6, NumberofShotLines,style4b)
- sheet0.write(16,6, NumberofSailLines,style4b)
- sheet0.write(17,6, AvSailKm_1,style4b)
- sheet0.write(18,6, AvShotKm_1,style4b)
- sheet0.write(19,6, LinearSailKm,style4b)
- sheet0.write(20,6, LinearShotKm,style4b)
- sheet0.write(21,6, round(TotalShootTimeHours,2),style4b)
- sheet0.write(22,6, round(TotalShootTimeDays,2),style4b)
- sheet0.write(23,6, round(ShotsPerKm2,2),style4b)
 
 # Sheet 1  Nodes and Nodes Lines
 
@@ -1001,8 +989,6 @@ def planout ():
  sheet1.write(0,5, "Line-Km",style6)
  sheet1.write(0,6, "Line-Time",style6)
 
-
-
 #FOCA1
  nodevel = float(velnode.get())*1.852
  row =1
@@ -1013,22 +999,82 @@ def planout ():
          sheet1.write(row,3,LNL[Inode],style4b)
          sheet1.write(row,4,LNL[Inode]-FNL[Inode]+1,style4b)
          sheet1.write(row,5,(LNL[Inode]-FNL[Inode])*dx,style4b)
-         sheet1.write(row,6,(LNL[Inode]-FNL[Inode])*(dx/nodevel),style4b)
-
+         sheet1.write(row,6,round((LNL[Inode]-FNL[Inode])*(dx/nodevel),3),style4b)
          row+=1
 
  sheet1.write(row,0, "",style6)
  sheet1.write(row,1, "",style6)
  sheet1.write(row,2, "",style6)
  sheet1.write(row,3, "",style6)
- sheet1.write(row,4, "",style6)
- sheet1.write(row,5, "",style6)
- sheet1.write(row,6, "",style6)
- 
-
-
-
+# sheet1.write(row,4, "",style6)
+# sheet1.write(row,5, "",style6)
+# sheet1.write(row,6, "",style6)
 # sheet1.write(row+4,3,float(velnode.get())*1.852,style4b)
+
+ s=""
+
+ value=str(row)
+ seqE=["SUM(E2:E",value,")"]
+ E=s.join(seqE)
+ sheet1.write(row, 4, xlwt.Formula(E),style6)
+
+ value=str(row)
+ seqF=["SUM(F2:F",value,")"]
+ F=s.join(seqF)
+ sheet1.write(row, 5, xlwt.Formula(F),style6)
+
+ value=str(row)
+ seqG=["SUM(G2:G",value,")"]
+ G=s.join(seqG)
+ sheet1.write(row, 6, xlwt.Formula(G),style6a)
+
+
+# Sheet 2   Nodes Polygon
+
+ sheet2.write(0,0, "X",style6)
+ sheet2.write(0,1, "Y",style6a)
+ for i in range(0,len(xp)):
+    sheet2.write(i+1,0,float(xp[i]),style4b)
+    sheet2.write(i+1,1,float(yp[i]),style4b)
+    next=i+1
+ sheet2.write(next+1,0, "Area sqKm",style6)
+ sheet2.write(next+1,1, round(NodeArea,2),style6a)
+
+
+# Sheet 4 Shot Polygon
+ sheet4.write(0,0, "X",style7)
+ sheet4.write(0,1, "Y",style7a)
+
+ for i in range(0,len(xp3)):
+    sheet4.write(i+1,0,float(xp3[i]),style4b)
+    sheet4.write(i+1,1,float(yp3[i]),style4b)
+ sheet4.write(next+1,0, "Area sqKm",style7)
+ sheet4.write(next+1,1, round(ShotArea,2),style7a)
+
+
+# Sheet 5 Fold
+
+ sheet5.write(0,0, "Offset",style6)
+ sheet5.write(0,1, "Fold",style6a)
+
+ FoldOffset=[]
+ FoldCount=[]
+# print (MaxOff.get())
+ OffInt=MaxOff.get()/20.
+ for i in  range(0,21):
+   FoldOffset.append (float(i*OffInt))
+   FoldCount.append ( (FoldOffset[i]/(nodex.get()*2)) * (FoldOffset[i]/(nodey.get()*2))*math.pi)
+ 
+ for i in range(1,len(FoldOffset)):
+    sheet5.write(i,0,float(FoldOffset[i]))
+    sheet5.write(i,1,float(FoldCount[i]))
+ sheet5.write(21,0, " ",style6)
+ sheet5.write(21,1, " ",style6a)
+
+
+
+
+
 
 
 
