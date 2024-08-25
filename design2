@@ -20,24 +20,25 @@ import datetime
 root = Tk()
 root.title('OBN SURVEY DESIGN')
 
-def NewFile():
-    name  = asksaveasfilename()
-    print (name)
-def OpenFile():
-    filename = askopenfilename()
-    fp = open(filename)
+#def NewFile():
+#    name  = asksaveasfilename()
+#    print (name)
+#def OpenFile():
+#    filename = askopenfilename()
+#    fp = open(filename)
 def About():
     print ("Version 1.50 = Marcos Guimaraes")
 menu = Menu(root)
 root.config(menu=menu)
-filemenu = Menu(menu)
-menu.add_cascade(label="File",font=("Sans Bold", 10), menu=filemenu)
-filemenu.add_command(label="Spreadsheet file", command=NewFile)
-filemenu.add_command(label="Node polygon file", command=OpenFile)
-filemenu.add_command(label="Shot polygon file", command=OpenFile)
-filemenu.add_command(label="EXIT", command=root.quit)
+#filemenu = Menu(menu)
+#menu.add_cascade(label="File",font=("Sans Bold", 10), menu=filemenu)
+#filemenu.add_command(label="Spreadsheet file", command=NewFile)
+#filemenu.add_command(label="Node polygon file", command=OpenFile)
+#filemenu.add_command(label="Shot polygon file", command=OpenFile)
+#filemenu.add_command(label="EXIT", command=root.quit)
 helpmenu = Menu(menu)
 menu.add_cascade(label="Help",font=("Sans Bold", 10), menu=helpmenu)
+
 helpmenu.add_command(label="About", command=About)
 
 photo = PhotoImage(file='geomagg3.png')
@@ -56,6 +57,8 @@ for row in reader:
     par1.append(row[0])
     par2.append(row[1])
 fp.close()
+
+#    BLOCO  1
 
 Label(root, text="--------------------------------------------------").grid(row=2, column=5,sticky=E)
 Label(root, text="  Nodes Grid Computation  ",font=("Sans Bold", 12),width=20).grid(row=2, column=4)
@@ -110,7 +113,7 @@ languages = [
 ]
 def ShowChoice():
     print(v.get())
-Label(root, text="""Grid options""",font=("Sans Bold", 10),fg = 'red',
+Label(root, text="""Grid options""",font=("Sans Bold", 10),fg = 'blue',
          padx = 20).grid(row =9, column=3,sticky=W)
 for val, language in enumerate(languages):
             Radiobutton(root, 
@@ -128,7 +131,7 @@ languages = [
 ]
 def ShowChoice():
     print(ort.get())
-Label(root, text="""Survey mode""",font=("Sans Bold", 10), fg = 'red',padx = 20).grid(row =9, column=5,sticky=W)
+Label(root, text="""Survey mode""",font=("Sans Bold", 10), fg = 'blue',padx = 20).grid(row =9, column=5,sticky=W)
 for val, language in enumerate(languages):
     Radiobutton(root, 
                   text=language,
@@ -138,6 +141,7 @@ for val, language in enumerate(languages):
                   value=val,font=("Sans Bold", 9),fg = 'blue').grid(row =10+val, column=5,sticky=W)
 
 #----------------------------------------------------------
+#         BLOCO 2
 
 Label(root, text="       ").grid(row=11, column=3, sticky=E)
 
@@ -167,17 +171,6 @@ origxa = DoubleVar()
 Entry(root, width=8, textvariable=origxa,font=("Sans Bold", 9)).grid(row=18, column=3,sticky='e')
 origxa.set(par1[5])
 
-#Label(root, text="  Vessel speed (knt): ",font=("Sans Bold", 9)).grid(row=18, column=4,sticky='w')
-#BoatSpeed = DoubleVar()
-#Entry(root, width=6, textvariable=BoatSpeed,font=("Sans Bold", 9)).grid(row=18, column=4,sticky='e')
-#BoatSpeed.set(4.)
-
-#Label(root, text="  Desired Record length (s): ",font=("Sans Bold", 9)).grid(row=19, column=4,sticky='w')
-#DesiredRecordLength = DoubleVar()
-#Entry(root, width=6, textvariable=DesiredRecordLength,font=("Sans Bold", 9)).grid(row=19, column=4,sticky='e')
-#DesiredRecordLength.set(10.)
-
-
 Label(root, text="  Shot grid origy: ",font=("Sans Bold", 9)).grid(row=18, column=5,sticky='w')
 origya = DoubleVar()
 Entry(root, width=8, textvariable=origya,font=("Sans Bold", 9)).grid(row=18, column=5,sticky='e')
@@ -198,7 +191,6 @@ rngya = DoubleVar()
 Entry(root, width=8, textvariable=rngya,font=("Sans Bold", 9)).grid(row=20, column=5,sticky='e')
 rngya.set(par2[7])
 
-
 Label(root, text="  Shot polygon halo (m): ",font=("Sans Bold", 9)).grid(row=19, column=5,sticky='w')
 halo = DoubleVar()
 Entry(root, width=8, textvariable=halo,font=("Sans Bold", 9)).grid(row=19, column=5,sticky='e')
@@ -213,7 +205,7 @@ lname = "Hexagonal Shooting"
 
 def ShowChoice():
     print(v1.get())
-Label(root, text="""Grid options""",font=("Sans Bold", 10),fg = 'red',
+Label(root, text="""Grid options""",font=("Sans Bold", 10),fg = 'blue',
     padx = 20).grid(row =25, column=3, sticky=W)
 Radiobutton(root,text=lname,padx = 20,variable=v1, 
     command=ShowChoice,value=1,font=("Sans Bold", 9),fg = 'blue').grid(row =26, column=3, sticky=W)
@@ -227,7 +219,7 @@ languages = [
 ]
 def ShowChoice():
     print(ort1.get())
-Label(root, text="""Survey mode""",font=("Sans Bold", 10),fg = 'red',
+Label(root, text="""Survey mode""",font=("Sans Bold", 10),fg = 'blue',
          padx = 20).grid(row =25, column=5,sticky=W)
 for val, language in enumerate(languages):
     Radiobutton(root, 
@@ -260,6 +252,7 @@ def change_dropdown(*args):
 tkvar.trace('w', change_dropdown)
 
 #----------------------------------------------------------------------------------------------------------------
+#      BLOCO 3
 
 Label(root, text="       ").grid(row=28, column=3, sticky=E)
 
@@ -284,28 +277,27 @@ chglinetime = DoubleVar()
 Entry(root, width=8, textvariable=chglinetime,font=("Sans Bold", 9)).grid(row=32, column=3,sticky='e')
 chglinetime.set(".5")
 
-
 Label(root, text="Maximum offset (m): ",font=("Sans Bold", 9)).grid(row=32, column=5,sticky='w')
 MaxOff = DoubleVar()
 Entry(root, width=8, textvariable=MaxOff,font=("Sans Bold", 9)).grid(row=32, column=5,sticky='e')
 MaxOff.set(8000)
 
-Label(root, text="Node Lines deployed before shooting : ",font=("Sans Bold", 9)).grid(row=33, column=3,sticky='w')
+Label(root, text="Node Lines Before Shooting : ",font=("Sans Bold", 9)).grid(row=33, column=3,sticky='w')
 PreNodeLines = DoubleVar()
 Entry(root, width=8, textvariable=PreNodeLines,font=("Sans Bold", 9)).grid(row=33, column=3,sticky='e')
-PreNodeLines.set("2")
+PreNodeLines.set("3")
 
 Label(root, text="ESPG : ",font=("Sans Bold", 9)).grid(row=33, column=5,sticky='w')
 espg = StringVar()
 Entry(root, width=10, textvariable=espg,font=("Sans Bold", 9)).grid(row=33, column=5,sticky='e')
 espg.set(par2[9])
 
-Label(root, text="PROJECT NAME : ",font=("Sans Bold", 9)).grid(row=34, column=3,sticky=W)
+Label(root, text="Project :     ",font=("Sans Bold", 9)).grid(row=34, column=3,sticky=W)
 ProjName = StringVar()
 Entry(root, width=10, textvariable=ProjName,font=("Sans Bold", 9)).grid(row=34, column=3,sticky='e')
 ProjName.set(par1[8])
 
-Label(root, text="COMPANY NAME : ",font=("Sans Bold", 9)).grid(row=34, column=5,sticky=W)
+Label(root, text="Client :     ",font=("Sans Bold", 9)).grid(row=34, column=5,sticky=W)
 Co = StringVar()
 Entry(root, width=10, textvariable=Co,font=("Sans Bold", 9)).grid(row=34, column=5,sticky='e')
 Co.set(par2[8])
@@ -317,13 +309,12 @@ Option.set(par1[9])
 
 Label(root, text="Version : ",font=("Sans Bold", 9)).grid(row=35, column=3,sticky=W)
 Version = StringVar()
-Entry(root, width=10, textvariable=Version,font=("Sans Bold", 9)).grid(row=35, column=3,sticky='e')
+Entry(root, width=20, textvariable=Version,font=("Sans Bold", 9)).grid(row=35, column=3,sticky='e')
 Version.set(par1[10])
-
-
 Label(root, text="  ").grid(row=36, column=3, sticky=E)
 
 #---------------------------------------------NODES PLOT SELECT--------------------------------------------------------
+
 var1a = IntVar()
 Checkbutton(root, text=' Plot node polygon  ',font=("Sans Bold", 9), variable=var1a ).grid(row =3, column=0, sticky=W)
 var1a.set("1")
@@ -333,36 +324,19 @@ var1b.set("1")
 var1c = IntVar()
 Checkbutton(root, text=' Plot node grid origin  ',font=("Sans Bold", 9), variable=var1c ).grid(row =5, column=0, sticky=W)
 var1c.set("1")
+
 #---------------------------------------------GRID PLOT SELECT -------------------------------------------------------------
+
 var2a = IntVar()
 Checkbutton(root, text=' Plot shot polygon ',font=("Sans Bold", 9), variable=var2a ).grid(row =11, column=0,sticky=W)
-var2a.set=("1")
+var2a.set=("0")
 var2b = IntVar()
 Checkbutton(root, text=' Plot grid points  ',font=("Sans Bold", 9), variable=var2b ).grid(row =12, column=0, sticky=W)
 var2b.set("0")
 var2c = IntVar()
 Checkbutton(root, text=' Plot grid origin  ',font=("Sans Bold", 9), variable=var2c ).grid(row =13, column=0, sticky=W)
-var2c.set("1")
+var2c.set("0")
 
-
-#var3b = IntVar()
-#Checkbutton(root, text=' Plot Sail lines  ',font=("Sans Bold", 9), variable=var3b ).grid(row =14, column=0, sticky=W)
-#var3b.set("0")
-
-#var3c = IntVar()
-#Checkbutton(root, text=' Plot sail origin  ',font=("Sans Bold", 9), variable=var3c ).grid(row =15,column=0, sticky=W)
-#var3c.set("0")
-
-#varspsr = IntVar()
-#Checkbutton(root, text=' Generate SPSr  ',font=("Sans Bold", 9), variable=varspsr ).grid(row  =18,column=0, sticky=W)
-#varspsr.set("0")
-
-#varspss = IntVar()
-#Checkbutton(root, text=' Generate SPSs  ',font=("Sans Bold", 9), variable=varspss ).grid(row  =19,column=0, sticky=W)
-#varspss.set("0")
-
-#varspss=0
-#varspsr=0
 #------------------Reading  Node polygon-----------------------------
 
 def rnodes():
@@ -653,8 +627,7 @@ def rshots():
  GRIDPT=np.reshape((np.asarray(PTNgrid)),(ny,nx))
  print("GRIDXX,GRIDYY,GRIDLN,GRIDPT", GRIDXX.shape,GRIDYY.shape,GRIDLN.shape,GRIDPT.shape)
  
-# FOCA0
- print  ("CARALHO PORRA", GRIDLN[0][0],GRIDLN[-1][-1])
+ print  ("GRID VALUES", GRIDLN[0][0],GRIDLN[-1][-1])
 
  ntotal=len(XXgrid)
  a=PB(400,20)
@@ -803,6 +776,8 @@ def planout ():
  sheet3 = book.add_sheet("Shots")
  sheet4 = book.add_sheet("Shots_polygon")
  sheet5 = book.add_sheet("Fold x Offset")
+ sheet6 = book.add_sheet("Grids")
+
 
 # Defining styles
  style= xlwt.easyxf(' font: name Arial, bold on; borders: left thick,  right thick,top thick, bottom thick;  pattern: pattern solid, fore_colour gray25 ;')
@@ -828,9 +803,9 @@ def planout ():
  sheet0.write(1,6,datetime.datetime.now(), stylex)
 
  sheet0.write(0,0, "      ",style6b)
- sheet0.write(0,1, "GEOMAGG      ",style6)
+ sheet0.write(0,1, "",style6)
  sheet0.write(0,2, "      ",style6)
- sheet0.write(0,3, "      ",style6)
+ sheet0.write(0,3, "GEOMAGG",style6)
  sheet0.write(0,4, "      ",style6)
  sheet0.write(0,5, "      ",style6)
  sheet0.write(0,6, "      ",style6a)
@@ -849,13 +824,13 @@ def planout ():
  sheet0.write(4,4, Version.get(),style4a)
  sheet0.write(6,0, espg.get(),style4a)
 
- sheet0.write(26,0, "      ",style6b)
- sheet0.write(26,1, "      ",style6)
- sheet0.write(26,2, "      ",style6)
- sheet0.write(26,3, "       ",style6)
- sheet0.write(26,4, "      ",style6)
- sheet0.write(26,5, "      ",style6)
- sheet0.write(26,6, "      ",style6a)
+ sheet0.write(30,0, "      ",style6b)
+ sheet0.write(30,1, "      ",style6)
+ sheet0.write(30,2, "      ",style6)
+ sheet0.write(30,3, "       ",style6)
+ sheet0.write(30,4, "      ",style6)
+ sheet0.write(30,5, "      ",style6)
+ sheet0.write(30,6, "      ",style6a)
 
 # Nodes ------------------------------------------------------------------------
  numnodesline=[]
@@ -930,53 +905,59 @@ def planout ():
  dxa=shotx.get()
  dya=shoty.get()
 
- sheet0.write(10,4, "SailLine Int (m):",style4)                             # E11
- sheet0.write(10,6, float(nsources*dya),style4b)                            # G11
+ sheet0.write(10,4, "Number of sources:",style4)                            # E11
+ sheet0.write(10,6, nsources,style4b)                                       # G11
 
- sheet0.write(11,4, "Shot Int (m):",style4)                                 # E12
- sheet0.write(11,6, float(dxa),style4b)                                     # G12
+ sheet0.write(11,4, "SailLine Int (m):",style4)                             # E12
+ sheet0.write(11,6, float(nsources*dya),style4b)                            # G12
 
- sheet0.write(12,4, "Bin X (m):",style4)                                    # E13
- sheet0.write(12,6, float(dxa/2),style4b)                                   # G13
+ sheet0.write(12,4, "Shot Int (m):",style4)                                 # E13
+ sheet0.write(12,6, float(dxa),style4b)                                     # G13
 
- sheet0.write(13,4, "Bin Y (m):",style4)                                    # E14
- sheet0.write(13,6, float(dya/2),style4b)                                   # G14
+ sheet0.write(13,4, "Bin X (m):",style4)                                    # E14
+ sheet0.write(13,6, float(dxa/2),style4b)                                   # G14
 
- sheet0.write(14,4, "Number of shots:",style4)                              # E15
- sheet0.write(14,6, NumberofShotPoints,style4b)                             # G15
+ sheet0.write(14,4, "Bin Y (m):",style4)                                    # E15
+ sheet0.write(14,6, float(dya/2),style4b)                                   # G15
 
- sheet0.write(15,4, "Number of shot lines:",style4)                         # E16
- sheet0.write(15,6, NumberofShotLines,style4b)                              # G16
+ sheet0.write(15,4, "Number of shots:",style4)                              # E16
+ sheet0.write(15,6, NumberofShotPoints,style4b)                             # G16
 
- sheet0.write(16,4, "Number of sail lines:",style4)                         # E17
- sheet0.write(16,6, NumberofSailLines,style4b)                              # G17
+ sheet0.write(16,4, "Number of shot lines:",style4)                         # E17
+ sheet0.write(16,6, NumberofShotLines,style4b)                              # G17
 
- sheet0.write(17,4, "Average Km Sail Line:",style4)                         # E18
- sheet0.write(17,6, AvSailKm_1,style4b)                                     # G18
+ sheet0.write(17,4, "Number of sail lines:",style4)                         # E18
+ sheet0.write(17,6, NumberofSailLines,style4b)                              # G18
 
- sheet0.write(18,4, "Average Km Shot Line:",style4)                         # E19
- sheet0.write(18,6, AvShotKm_1,style4b)                                     # G19
+ sheet0.write(18,4, "Average Km Sail Line:",style4)                         # E19
+ sheet0.write(18,6, AvSailKm_1,style4b)                                     # G19
 
- sheet0.write(19,4, "Sail Lines (Km):",style4)                              # E20
- sheet0.write(19,6, LinearSailKm,style4b)                                   # G20
+ sheet0.write(19,4, "Average Km Shot Line:",style4)                         # E20
+ sheet0.write(19,6, AvShotKm_1,style4b)                                     # G20
 
- sheet0.write(20,4, "Shot Lines (Km):",style4)                              # E21
- sheet0.write(20,6, LinearShotKm,style4b)                                   # G21
+ sheet0.write(20,4, "Sail Lines (Km):",style4)                              # E21
+ sheet0.write(20,6, LinearSailKm,style4b)                                   # G21
 
- sheet0.write(21,4, "Shot hour without line chg:",style4)                   # E22
- sheet0.write(21,6, round(TotalShootTimeHours,2),style4b)                   # G22
+ sheet0.write(21,4, "Shot Lines (Km):",style4)                              # E22
+ sheet0.write(21,6, LinearShotKm,style4b)                                   # G22
 
- sheet0.write(22,4, "Shot days without line chg:",style4)                   # E23
- sheet0.write(22,6, round(TotalShootTimeDays,2),style4b)                    # G23
+ sheet0.write(22,4, "Shot hour without line chg:",style4)                   # E23
+ sheet0.write(22,6, round(TotalShootTimeHours,2),style4b)                   # G23
 
- sheet0.write(23,4, "Shot density /SQKm:",style4)                           # E24
- sheet0.write(23,6, round(ShotsPerKm2,2),style4b)                           # G24
+ sheet0.write(23,4, "Shot days without line chg:",style4)                   # E24
+ sheet0.write(23,6, round(TotalShootTimeDays,2),style4b)                    # G24
 
-# sheet0.write(17,4, "Min shots /line:",style4)
-# sheet0.write(18,4, "Max shots /line:",style4)
-# sheet0.write(19,4, "Line direction:",style4)
-# sheet0.write(20,4, "Shot area sqKm:",style4)
+ sheet0.write(24,4, "Shot density /SQKm:",style4)                           # E25
+ sheet0.write(24,6, round(ShotsPerKm2,2),style4b)                           # G25
 
+ sheet0.write(25,4, "Min shots /line:",style4)                              # E26
+
+ sheet0.write(26,4, "Max shots /line:",style4)                              # E27
+
+ sheet0.write(27,4, "Line direction:",style4)                               # E28
+
+ sheet0.write(28,4, "Shot area sqKm:",style4)                               # E29
+ sheet0.write(29,6, round(ShotArea,2),style4b)                              # G29
 #
 
 # Sheet 1  Nodes and Nodes Lines
@@ -1051,7 +1032,6 @@ def planout ():
  sheet4.write(next+1,0, "Area sqKm",style7)
  sheet4.write(next+1,1, round(ShotArea,2),style7a)
 
-
 # Sheet 5 Fold
 
  sheet5.write(0,0, "Offset",style6)
@@ -1071,14 +1051,15 @@ def planout ():
  sheet5.write(21,0, " ",style6)
  sheet5.write(21,1, " ",style6a)
 
+# Sheet 6  Grids
 
+ sheet6.write(1,0, "GRID",style6)
+ sheet6.write(0,1, "Line_1",style6)
+ sheet6.write(0,2, "Line_N",style6a)
+ sheet6.write(0,3, "Point_1",style6)
+ sheet6.write(0,4, "Point_N",style6a)
 
-
-
-
-
-
-
+#FOCA4
 
 # sheet1.write(0,5, "Navtime hrs",style)
 
@@ -1597,11 +1578,11 @@ def plot():
  if var2b.get() == 1:
    ax.scatter(XXgrid,YYgrid,s=.3,color='black',alpha=.2)
 
-# if var3b.get() == 1:
-#   ax.scatter(XXsail,YYsail,s=.3,color='black',alpha=.9)
+## if var3b.get() == 1:
+## ax.scatter(XXsail,YYsail,s=.3,color='green',alpha=.4)
 
  if var1c.get() == 1:
-   ax.scatter(x0,y0,s=24.5,color='red',marker='s',alpha=.9)
+  ax.scatter(x0,y0,s=24.5,color='red',marker='s',alpha=.9)
 
  if var2c.get() == 1:
    ax.scatter(x0a,y0a,s=24.5,color='blue',marker='s',alpha=.9)

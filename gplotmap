@@ -1,0 +1,24 @@
+#!/bin/bash
+awk 'NR>1 {print$1,$2}' nodes.txt >nodes_tmp
+awk 'NR>1 {print$1,$2}' shots.txt >shots_tmp
+awk 'NR>1 {print $1,$2}' pol2.txt >pol_nodes
+awk 'NR>1 {print $1,$2}' pol3.txt >pol_shots
+
+regiao=`gmt gmtinfo pol_shots  -I1 `
+echo $regiao
+output=modelo.ps
+grid="-B4000/2000WS"
+dim2="-JX6i"
+gmt psxy $regiao $dim2 $grid  -Sc.1.2  -Gred -P -K  -Y5. nodes_tmp  > $output
+gmt psxy $regiao $dim2   -Sc.05  -Gblue -P -K  shots_tmp -O >> $output
+gmt psxy $regiao $dim2  -Wred  -W1.2 -P -K  pol_nodes -O >> $output
+gmt psxy $regiao $dim2  -Wblue -W1.2  -P -K  pol_shots -O >> $output
+rm shots_tmp
+rm nodes_tmp
+rm pol_nodes
+rm pol_shots
+gs modelo.ps
+
+#ps2pdf $output
+#rm $output
+#okular modelo.ps 
