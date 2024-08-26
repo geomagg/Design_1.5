@@ -796,9 +796,9 @@ def planout ():
  style6= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium;  pattern: pattern solid, fore_colour light-orange ')
  style6a= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium, right medium;  pattern: pattern solid, fore_colour light-orange ')
  style6b= xlwt.easyxf('font: name Arial, bold on, height 220; borders: bottom medium, top medium, left medium;  pattern: pattern solid, fore_colour light-orange ')
- style7= xlwt.easyxf('font: colour white, name Arial, bold on, height 220; borders: bottom medium, top medium;  pattern: pattern solid, fore_colour light-blue ')
- style7a= xlwt.easyxf('font: colour white, name Arial, bold on, height 220; borders: bottom medium, top medium, right medium;  pattern: pattern solid, fore_colour light-blue ')
- style7b= xlwt.easyxf('font: colour white, name Arial, bold on, height 220; borders: bottom medium, top medium, left medium;  pattern: pattern solid, fore_colour light-blue ')
+ style7= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium;  pattern: pattern solid, fore_colour light-blue ')
+ style7a= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium, right medium;  pattern: pattern solid, fore_colour light-blue ')
+ style7b= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium, left medium;  pattern: pattern solid, fore_colour light-blue ')
  style8= xlwt.easyxf(' font: bold off , height 140;')
 
 # sheet0.insert_bitmap('geomagg3.png',0,0)
@@ -822,19 +822,22 @@ def planout ():
  sheet0.write(8,5, "      ",style6)
  sheet0.write(8,6, "      ",style6a)
 
- sheet0.write(2,0, ProjName.get(),style4a)
- sheet0.write(4,0, Co.get(),style4a)
- sheet0.write(4,2, Option.get(),style4a)
- sheet0.write(4,4, Version.get(),style4a)
- sheet0.write(6,0, espg.get(),style4a)
 
- sheet0.write(29,0, "      ",style6b)
- sheet0.write(29,1, "      ",style6)
- sheet0.write(29,2, "      ",style6)
- sheet0.write(29,3, "       ",style6)
- sheet0.write(29,4, "      ",style6)
- sheet0.write(29,5, "      ",style6)
- sheet0.write(29,6, "      ",style6a)
+
+
+ sheet0.write(2,0, ProjName.get(),style4e)
+ sheet0.write(4,0, Co.get(),style4e)
+ sheet0.write(4,2, Option.get(),style4e)
+ sheet0.write(4,4, Version.get(),style4e)
+ sheet0.write(6,0, espg.get(),style4e)
+
+ sheet0.write(30,0, "      ",style6b)
+ sheet0.write(30,1, "      ",style6)
+ sheet0.write(30,2, "      ",style6)
+ sheet0.write(30,3, "       ",style6)
+ sheet0.write(30,4, "      ",style6)
+ sheet0.write(30,5, "      ",style6)
+ sheet0.write(30,6, "      ",style6a)
 
 # Nodes ------------------------------------------------------------------------
  numnodesline=[]
@@ -902,7 +905,7 @@ def planout ():
 
  sheet0.write(20,0, "Line direction:",style4e)                              # A21
  sheet0.write(20,1, "",style4e)                                             # B21
- sheet0.write(20,2, 90.-float(anglex.get()),style4b)                        # C21
+ sheet0.write(20,2, anglex.get(),style4b)                                   # C21
 
  sheet0.write(21,0, "Nodes area sqKm:",style4e)                             # A22
  sheet0.write(21,1, "",style4e)                                             # B22
@@ -965,34 +968,38 @@ def planout ():
  sheet0.write(20,5, "",style4d)                                             # E21
 # sheet0.write(20,6, round(TotalShootTimeHours,2),style4b)                  # G21
 
- sheet0.write(21,4, "Total Shoot. time (days)",style4d)                    # E22
+ sheet0.write(21,4, "Total Shoot. time (days)",style4d)                     # E22
  sheet0.write(21,5, "",style4d)                                             # E22
 # sheet0.write(21,6, round(TotalShootTimeDays,2),style4b)                   # G22
 
- sheet0.write(22,4, "Shot density / spKm:",style4d)                          # E23
+ sheet0.write(22,4, "Shot density / spKm:",style4d)                         # E23
  sheet0.write(22,5, "",style4d)                                             # E23
 
- sheet0.write(23,4, "Avg length SailLine (Km):",style4d)                    # E24
+ sheet0.write(23,4, "Number of Sail Lines:",style4d)                        # E24
  sheet0.write(23,5, "",style4d)                                             # E24
 # sheet0.write(23,6, AvSailKm_1,style4b)                                    # G24
 
- sheet0.write(24,4, "Total Sail Linear Km:",style4d)                        # E25
- sheet0.write(24,5, "",style4d)                                             # F25
-# sheet0.write(24,6, LinearSailKm,style4b)                                  # G25
+ sheet0.write(24,4, "Avg length SailLine (Km):",style4d)                    # E25
+ sheet0.write(24,5, "",style4d)                                             # E25
+# sheet0.write(23,6, AvSailKm_1,style4b)                                    # G25
 
- sheet0.write(25,4, "Min shots / line:",style4d)                             # E28
- sheet0.write(25,5, "",style4d)                                             # F28
+ sheet0.write(25,4, "Total Sail Linear Km:",style4d)                        # E26
+ sheet0.write(25,5, "",style4d)                                             # F26
+# sheet0.write(24,6, LinearSailKm,style4b)                                  # G26
 
- sheet0.write(26,4, "Max shots / line:",style4d)                             # E29
- sheet0.write(26,5, "",style4d)                                             # F29
+ sheet0.write(26,4, "Min shots / line:",style4d)                            # E27
+ sheet0.write(26,5, "",style4d)                                             # F27
 
- sheet0.write(27,4, "Line dir (degrees):",style4d)                              # E30
- sheet0.write(27,5, "",style4d)                                             # F30
- sheet0.write(27,6, anglexa.get(),style4b)                                  # G30
+ sheet0.write(27,4, "Max shots / line:",style4d)                            # E28
+ sheet0.write(27,5, "",style4d)                                             # F28
 
- sheet0.write(28,4, "Shot area sqKm:",style4d)                              # E30
- sheet0.write(28,5, "",style4d)                                             # F30
- sheet0.write(28,6, round(ShotArea,2),style4b)                              # G30
+ sheet0.write(28,4, "Line dir (degrees):",style4d)                          # E29
+ sheet0.write(28,5, "",style4d)                                             # F29
+ sheet0.write(28,6, anglexa.get(),style4b)                                  # G29
+
+ sheet0.write(29,4, "Shot area sqKm:",style4d)                              # E30
+ sheet0.write(29,5, "",style4d)                                             # F30
+ sheet0.write(29,6, round(ShotArea,2),style4b)                              # G30
 #
 
 # Sheet 1  Nodes and Nodes Lines
@@ -1056,8 +1063,33 @@ def planout ():
  sheet2.write(inext+1,0, "Area sqKm",style6)
  sheet2.write(inext+1,1, round(NodeArea,2),style6a)
 
-# Sheet 3  Shots
+# Sheet 3  Shots and sailline
 
+## Rereading the sail.txt
+ sailline,sailpoint = [], []
+ with open('sail.txt','r') as fsail:
+   next(fsail)
+   reader = csv.reader(fsail, delimiter=' ')
+   for row in reader:
+     sailline.append(float(row[2]))
+     sailpoint.append(float(row[3]))
+ fsail.close()
+
+# Find the line in hte vector and summ how many it happens(this is the numeber of sailpoints  in each line)
+ new_sailline = []
+ new_sailpoint = []
+ for ksl in sailline:
+     if ksl not in new_sailline:
+        new_sailline.append(ksl)
+        new_sailpoint.append(sailline.count(ksl))
+ fsailp,lsailp = [],[]
+ n=len(sailpoint)-1
+ for kss in range(0,n):
+    if (sailpoint[kss+1]-sailpoint[kss])<0: 
+        lsailp.append(sailpoint[kss])
+ lsailp.append(sailpoint[n])
+
+## Rereading the shot.txt
  sxx,syy = [],[]
  sline,spoint = [], []
  with open('shots.txt','r') as fshot:
@@ -1070,13 +1102,13 @@ def planout ():
      spoint.append(float(row[3]))
  fshot.close()
 
+# Find the line in the vector and sum how times many it happens(this is the numeber of shotpoints  in each line)
  new_shotline = []
  new_numbershots = []
  for isl in sline:
      if isl not in new_shotline:
         new_shotline.append(isl)
         new_numbershots.append(sline.count(isl))
-
  fsp,lsp = [],[]
  nn=len(spoint)-1
  for iss in range(0,nn):
@@ -1085,12 +1117,20 @@ def planout ():
  lsp.append(spoint[nn])
 
 # Compute Sheet 0 values
+ new_saillinekm = []
+ new_saillinedays = []
+ new_saillinehours = [] 
+ for ip in range(0,len(new_sailpoint)):
+      kmsail = (new_sailpoint[ip]-1)*(shotx.get()/1000.)
+      new_saillinekm.append(kmsail)
+      tsailhours = kmsail/(velshot.get()*1.852)
+      tsaildays = tsailhours/24
+      new_saillinedays.append(tsaildays)
+      new_saillinehours.append(tsailhours)
 
  new_shotlinekm = []
  new_shotlinedays = []
  new_shotlinehours = []
-
-#(shotx.get()/1000.)
  for iporra in range(0,len(new_numbershots)):
       km = (new_numbershots[iporra]-1)*(shotx.get()/1000.)
       new_shotlinekm.append(km)
@@ -1099,25 +1139,29 @@ def planout ():
       new_shotlinedays.append(tdays)
       new_shotlinehours.append(thours)
 
+# Now writing 
  sheet0.write(16,6, sum(new_numbershots),style4b)                              # G17
  sheet0.write(17,6, len(new_shotline),style4b)                                 # G18
  sheet0.write(18,6, round(sum(new_shotlinekm)/len(new_shotline),2),style4b)    # G19
  sheet0.write(19,6, sum(new_shotlinekm),style4b)                               # G20
  sheet0.write(20,6, round(sum(new_shotlinehours),2),style4b)                   # G21
  sheet0.write(21,6, round(sum(new_shotlinedays),2),style4b)                    # G22
+
  sheet0.write(22,6, round(sum(new_numbershots)/ShotArea,2),style4b)            # G23
+ sheet0.write(23,6, len(new_sailline),style4b)                                 # G24
+
  sheet0.write(25,6, min(new_numbershots),style4b)                              # G26
  sheet0.write(26,6, max(new_numbershots),style4b)                              # G27
 
  sheet3.write(0,0, "Line",style7)
  sheet3.write(0,1, "LineNum",style7)
- sheet3.write(0,2, "Shots in line ",style7)
- sheet3.write(0,3, "Lst Shot ",style7)
- sheet3.write(0,4, "Fst Shot",style7)
+ sheet3.write(0,2, "Shots/line ",style7)
+ sheet3.write(0,3, "First Shot ",style7)
+ sheet3.write(0,4, "Last Shot",style7)
  sheet3.write(0,5, "Line-Km",style7)
  sheet3.write(0,6, "Line-hours",style7a)
  sheet3.write(0,7, "Line-days",style7a)
-
+ sheet3.write(0,8, "Sail-Km",style7a)
 
 
  row = 1
@@ -1125,32 +1169,34 @@ def planout ():
      sheet3.write(row,0,row,style4b)
      sheet3.write(row,1,new_shotline[row-1],style4b)
      sheet3.write(row,2,new_numbershots[row-1],style4b)
-     sheet3.write(row,3,lsp[row-1],style4b)
-     sheet3.write(row,4,lsp[row-1]-new_numbershots[row-1]+1,style4b)
+     sheet3.write(row,3,lsp[row-1]-new_numbershots[row-1]+1,style4b)
+     sheet3.write(row,4,lsp[row-1],style4b)
      sheet3.write(row,5,(new_numbershots[row-1]-1)*(shotx.get()/1000.),style4b)
      sheet3.write(row,6,round(((new_numbershots[row-1]-1)*(shotx.get()/1000.))/(velshot.get()*1.852),2),style4b)
      sheet3.write(row,7,round((((new_numbershots[row-1]-1)*(shotx.get()/1000.))/(velshot.get()*1.852))/24,3),style4b)
-
-#     sheet3.write(row,6,(shotx.get()*2/1000.),style4b)
      row+=1
+
+ srow = 1
+ for Isail in new_sailline:
+     sheet3.write(srow,8,(new_sailpoint[srow-1]-1)*(shotx.get()/1000.),style4b)
+     srow+=1
 
 
  sheet3.write(row,0, "Line",style7)
  sheet3.write(row,1, "LineNum",style7)
- sheet3.write(row,2, "Shots in line ",style7)
- sheet3.write(row,3, "Lst Shot ",style7)
- sheet3.write(row,4, "Fst Shot",style7)
+ sheet3.write(row,2, "Shots/line ",style7)
+ sheet3.write(row,3, "First Shot ",style7)
+ sheet3.write(row,4, "Last Shot",style7)
  sheet3.write(row,5, "Line-Km",style7)
  sheet3.write(row,6, "Line-hours",style7a)
  sheet3.write(row,7, "Line-days",style7a)
+ sheet3.write(row,8, "Sail-Km",style7a)
 
 
  sheet3.write(row+1,0, "",style7)
  sheet3.write(row+1,1, "",style7)
  sheet3.write(row+1,3, "",style7)
  sheet3.write(row+1,4, "",style7)
-
-
 
 
 
@@ -1173,6 +1219,9 @@ def planout ():
  H=s.join(seqH)
  sheet3.write(row+1, 7, xlwt.Formula(H),style7a)
 
+ seqI=["SUM(I2:I",value,")"]
+ I=s.join(seqI)
+ sheet3.write(row+1, 8, xlwt.Formula(I),style7a)
 
 
 # Sheet 4 Shot Polygon
