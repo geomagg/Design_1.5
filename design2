@@ -235,7 +235,7 @@ Label(root, text="       ").grid(row=24, column=3, sticky=E)
 root1 = Frame(root)
 tkvar = StringVar(root1)
  # Dictionary with options
-choices = { 'ProvidedPolygon','CaioExpansion','CaioExpRounded'}
+choices = { 'ProvidedPolygon','CaioExpansion'}
 tkvar.set('ProvidedPolygon') # set the default option 
 
 popupMenu = OptionMenu(root, tkvar, *choices)
@@ -516,17 +516,17 @@ def rshots():
   for i in range (0,len(xp3)):
    e.write("%7.2f %7.2f\n" % (float(xp3[i]),float(yp3[i])))
 
- if tkvar.get()=='CaioExpRounded':  
-    e=open('polshot.txt','w')
-    C=Poly(xp,yp,halo.get())
-    xp3=C.getpxe()
-    yp3=C.getpye()
-    C1=Polyexp(xp3,yp3,halo.get())
-    xp3=C1.getpex()
-    yp3=C1.getpey()
-    e.write("%s %s\n" % ("x","y"))
-    for i in range (0,len(xp3)):
-      e.write("%7.2f %7.2f\n" % (float(xp3[i]),float(yp3[i])))
+# if tkvar.get()=='CaioExpRounded':  
+#    e=open('polshot.txt','w')
+#    C=Poly(xp,yp,halo.get())
+#    xp3=C.getpxe()
+#    yp3=C.getpye()
+#    C1=Polyexp(xp3,yp3,halo.get())
+#    xp3=C1.getpex()
+#    yp3=C1.getpey()
+#    e.write("%s %s\n" % ("x","y"))
+#    for i in range (0,len(xp3)):
+#      e.write("%7.2f %7.2f\n" % (float(xp3[i]),float(yp3[i])))
 
  for k in range(0,len(xp3)):
       X3.append([float(xp3[k]),float(yp3[k])])
@@ -787,6 +787,9 @@ def planout ():
  style3= xlwt.easyxf(' font: name Arial, bold on; borders: left thick,  right thick,top thick, bottom thick;  pattern: pattern solid, fore_colour lime ;')
  style4a= xlwt.easyxf(' font: bold on , height 220;')
  style4= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour white ;')
+ style4d= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour light_turquoise ;')
+ style4e= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour light-turquoise ;')
+ style4f= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour light_green ;')
  style4b= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour ivory ;')
  style4c= xlwt.easyxf(' font: bold on , height 200; pattern: pattern solid, fore_colour light-blue ;')
  style5= xlwt.easyxf('font: name Arial, bold on; borders: left thick,  right thick,top thick, bottom thick;  pattern: pattern solid, fore_colour light-blue ')
@@ -825,13 +828,13 @@ def planout ():
  sheet0.write(4,4, Version.get(),style4a)
  sheet0.write(6,0, espg.get(),style4a)
 
- sheet0.write(30,0, "      ",style6b)
- sheet0.write(30,1, "      ",style6)
- sheet0.write(30,2, "      ",style6)
- sheet0.write(30,3, "       ",style6)
- sheet0.write(30,4, "      ",style6)
- sheet0.write(30,5, "      ",style6)
- sheet0.write(30,6, "      ",style6a)
+ sheet0.write(29,0, "      ",style6b)
+ sheet0.write(29,1, "      ",style6)
+ sheet0.write(29,2, "      ",style6)
+ sheet0.write(29,3, "       ",style6)
+ sheet0.write(29,4, "      ",style6)
+ sheet0.write(29,5, "      ",style6)
+ sheet0.write(29,6, "      ",style6a)
 
 # Nodes ------------------------------------------------------------------------
  numnodesline=[]
@@ -857,46 +860,60 @@ def planout ():
 
 # Nodes
 
- sheet0.write(10,0, "Node Line Interval (m):",style4)                       # A11
+ sheet0.write(10,0, "Node Line Interval (m):",style4f)                      # A11
+ sheet0.write(10,1, "",style4f)                                             # B11
  sheet0.write(10,2, float(nodex.get()),style4b)                             # C11
 
- sheet0.write(11,0, "Node Interval (m):",style4)                            # A12
+ sheet0.write(11,0, "Node Interval (m):",style4f)                           # A12
+ sheet0.write(11,1, "",style4f)                                             # B12
  sheet0.write(11,2, float(nodey.get()),style4b)                             # C12
 
- sheet0.write(12,0, "Number of nodes:",style4 )                             # A13
+ sheet0.write(12,0, "Number of nodes:",style4f )                            # A13
+ sheet0.write(12,1, "",style4f )                                            # B13
  sheet0.write(12,2, sum(numnodesline),style4b)                              # C13
 
- sheet0.write(13,0, "Number of lines:",style4)                              # A14
+ sheet0.write(13,0, "Number of lines:",style4f)                             # A14
+ sheet0.write(13,1, "",style4f)                                             # B14
  sheet0.write(13,2, len(LineNumber),style4b)                                # C14
 
- sheet0.write(14,0, "Total line length (Km):",style4)                       # A15
+ sheet0.write(14,0, "Total line length (Km):",style4e)                      # A15
+ sheet0.write(14,1, ":",style4e)                                            # B15
  sheet0.write(14,2, sum(kmline),style4b)                                    # C15
 
- sheet0.write(15,0, "Average line length (Km):",style4)                     # A16
+ sheet0.write(15,0, "Average line length (Km):",style4e)                    # A16
+ sheet0.write(15,1, "",style4e)                                             # B16
  sheet0.write(15,2, round(sum(kmline)/len(kmline),2),style4b)               # C16
 
- sheet0.write(16,0, "Nodes density /sqKm:",style4)                          # A17
+ sheet0.write(16,0, "Nodes density /sqKm:",style4e)                         # A17
+ sheet0.write(16,1, "",style4e)                                             # B17
  sheet0.write(16,2, round(sum(numnodesline)/NodeArea,2),style4b)            # C17
 
- sheet0.write(17,0, "Avg nodes /line:",style4)                              # A18
+ sheet0.write(17,0, "Avg nodes /line:",style4e)                             # A18
+ sheet0.write(17,1, "",style4e)                                             # B18
  sheet0.write(17,2, round(sum(numnodesline)/len(LineNumber),1) ,style4b)    # C18
 
- sheet0.write(18,0, "Max nodes in line:",style4)                            # A19
+ sheet0.write(18,0, "Max nodes in line:",style4e)                           # A19
+ sheet0.write(18,1, "",style4e)                                             # B19
  sheet0.write(18,2, max(numnodesline) ,style4b)                             # C19
  
- sheet0.write(19,0, "Min nodes in line:",style4)                            # A20
+ sheet0.write(19,0, "Min nodes in line:",style4e)                           # A20
+ sheet0.write(19,1, "",style4e)                                             # B20
  sheet0.write(19,2,min(numnodesline) ,style4b)                              # C20
 
- sheet0.write(20,0, "Line direction:",style4)                               # A21
+ sheet0.write(20,0, "Line direction:",style4e)                              # A21
+ sheet0.write(20,1, "",style4e)                                             # B21
  sheet0.write(20,2, 90.-float(anglex.get()),style4b)                        # C21
 
- sheet0.write(21,0, "Nodes area sqKm:",style4)                              # A22
+ sheet0.write(21,0, "Nodes area sqKm:",style4e)                             # A22
+ sheet0.write(21,1, "",style4e)                                             # B22
  sheet0.write(21,2, round(NodeArea,2),style4b)                              # C22
 
- sheet0.write(22,0, "Geometry",style4)                                      # A23
+ sheet0.write(22,0, "Geometry",style4e)                                     # A23
+ sheet0.write(22,1, "",style4e)                                             # B23
  sheet0.write(22,2, geometry,style4b)                                       # C23
 
- sheet0.write(23,0, "Aphotema",style4)                                      # A23
+ sheet0.write(23,0, "Aphotema",style4e)                                     # A23
+ sheet0.write(23,1, "",style4e)                                             # B23
  sheet0.write(23,2, apothema,style4b)                                       # C23
 
 
@@ -906,63 +923,76 @@ def planout ():
  dxa=2*shotx.get()
  dya=shoty.get()
 
- sheet0.write(10,4, "Number of sources:",style4)                            # E11
+ sheet0.write(10,4, "Number of sources:",style4f)                           # E11
+ sheet0.write(10,5, "",style4f)                                             # F11
  sheet0.write(10,6, nsources,style4b)                                       # G11
 
- sheet0.write(11,4, "Sail Line Int(m):",style4)                             # E12
+ sheet0.write(11,4, "Sail Line Interval (m):",style4f)                      # E12
+ sheet0.write(11,5, "",style4f)                                             # F12
  sheet0.write(11,6, float(nsources*dya),style4b)                            # G12
 
- sheet0.write(12,4, "Shot Line Int(m):",style4)                             # E13
- sheet0.write(12,6, float(dya),style4b)                                     # G13
+ sheet0.write(12,4, "Shot Line Interval (m):",style4f)                      # E13
+ sheet0.write(12,5, "",style4f)                                             # F13
+ sheet0.write(12,6, float(shoty.get()),style4b)                             # G13
 
- sheet0.write(13,4, "Shot Int (m):",style4)                                 # E14
- sheet0.write(13,6, float(dxa),style4b)                                     # G14
+ sheet0.write(13,4, "Shot Point Int (m):",style4f)                          # E14
+ sheet0.write(13,5, "",style4f)                                             # F14
+ sheet0.write(13,6, float(shotx.get()),style4b)                             # G14
 
- sheet0.write(14,4, "Bin X (m):",style4)                                    # E15
- sheet0.write(14,6, float(dxa/2),style4b)                                   # G15
+ sheet0.write(14,4, "Bin X (m):",style4f)                                   # E15
+ sheet0.write(14,5, "",style4f)                                             # F15
+ sheet0.write(14,6, float(shotx.get()/2),style4b)                           # G15
 
- sheet0.write(15,4, "Bin Y (m):",style4)                                    # E16
- sheet0.write(15,6, float(dya),style4b)                                     # G16
+ sheet0.write(15,4, "Bin Y (m):",style4f)                                   # E16
+ sheet0.write(15,5, "",style4f)                                             # E16
+ sheet0.write(15,6, float(shoty.get()/2),style4b)                           # G16
 
- sheet0.write(16,4, "Number of shots:",style4)                              # E17
-# sheet0.write(16,6, NumberofShotPoints,style4b)                             # G17
+ sheet0.write(16,4, "Number of shots:",style4d)                             # E17
+ sheet0.write(16,5, "",style4d)                                             # F17
 
- sheet0.write(17,4, "Number of shot lines:",style4)                         # E18
-# sheet0.write(17,6, NumberofShotLines,style4b)                              # G18
+ sheet0.write(17,4, "Number of shot lines:",style4d)                        # E18
+ sheet0.write(17,5, "",style4d)                                             # F18
 
- sheet0.write(18,4, "Number of sail lines:",style4)                         # E19
-# sheet0.write(18,6, NumberofSailLines,style4b)                              # G19
+ sheet0.write(18,4, "Average Km Shot Line:",style4d)                        # E19
+ sheet0.write(18,5, "",style4d)                                             # F19
+# sheet0.write(20,6, AvShotKm_1,style4b)                                    # G19
 
- sheet0.write(19,4, "Average Km Sail Line:",style4)                         # E20
-# sheet0.write(19,6, AvSailKm_1,style4b)                                     # G20
+ sheet0.write(19,4, "Shot Lines (Km):",style4d)                             # E20
+ sheet0.write(19,5, "",style4d)                                             # F20
+# sheet0.write(19,6, LinearShotKm,style4b)                                  # G20
 
- sheet0.write(20,4, "Average Km Shot Line:",style4)                         # E21
-# sheet0.write(20,6, AvShotKm_1,style4b)                                     # G21
+ sheet0.write(20,4, "Total Shoot. time (hrs)",style4d)                      # E21
+ sheet0.write(20,5, "",style4d)                                             # E21
+# sheet0.write(20,6, round(TotalShootTimeHours,2),style4b)                  # G21
 
- sheet0.write(21,4, "Sail Lines (Km):",style4)                              # E22
-# sheet0.write(21,6, LinearSailKm,style4b)                                   # G22
+ sheet0.write(21,4, "Total Shoot. time (days)",style4d)                    # E22
+ sheet0.write(21,5, "",style4d)                                             # E22
+# sheet0.write(21,6, round(TotalShootTimeDays,2),style4b)                   # G22
 
- sheet0.write(22,4, "Shot Lines (Km):",style4)                              # E23
- sheet0.write(22,6, LinearShotKm,style4b)                                   # G23
+ sheet0.write(22,4, "Shot density / spKm:",style4d)                          # E23
+ sheet0.write(22,5, "",style4d)                                             # E23
 
- sheet0.write(23,4, "Shot hour without line chg:",style4)                   # E24
- sheet0.write(23,6, round(TotalShootTimeHours,2),style4b)                   # G24
+ sheet0.write(23,4, "Avg length SailLine (Km):",style4d)                    # E24
+ sheet0.write(23,5, "",style4d)                                             # E24
+# sheet0.write(23,6, AvSailKm_1,style4b)                                    # G24
 
- sheet0.write(24,4, "Shot days without line chg:",style4)                   # E25
- sheet0.write(24,6, round(TotalShootTimeDays,2),style4b)                    # G25
+ sheet0.write(24,4, "Total Sail Linear Km:",style4d)                        # E25
+ sheet0.write(24,5, "",style4d)                                             # F25
+# sheet0.write(24,6, LinearSailKm,style4b)                                  # G25
 
- sheet0.write(25,4, "Shot density /SQKm:",style4)                           # E26
- sheet0.write(25,6, round(ShotsPerKm2,2),style4b)                           # G26
+ sheet0.write(25,4, "Min shots / line:",style4d)                             # E28
+ sheet0.write(25,5, "",style4d)                                             # F28
 
- sheet0.write(26,4, "Min shots /line:",style4)                              # E27
+ sheet0.write(26,4, "Max shots / line:",style4d)                             # E29
+ sheet0.write(26,5, "",style4d)                                             # F29
 
- sheet0.write(27,4, "Max shots /line:",style4)                              # E28
+ sheet0.write(27,4, "Line dir (degrees):",style4d)                              # E30
+ sheet0.write(27,5, "",style4d)                                             # F30
+ sheet0.write(27,6, anglexa.get(),style4b)                                  # G30
 
- sheet0.write(28,4, "Line direction:",style4)                               # E29
- sheet0.write(28,6, anglexa.get(),style4b)                                   # G29
-
- sheet0.write(29,4, "Shot area sqKm:",style4)                               # E30
- sheet0.write(29,6, round(ShotArea,2),style4b)                              # G30
+ sheet0.write(28,4, "Shot area sqKm:",style4d)                              # E30
+ sheet0.write(28,5, "",style4d)                                             # F30
+ sheet0.write(28,6, round(ShotArea,2),style4b)                              # G30
 #
 
 # Sheet 1  Nodes and Nodes Lines
@@ -1054,13 +1084,30 @@ def planout ():
         lsp.append(spoint[iss])
  lsp.append(spoint[nn])
 
+# Compute Sheet 0 values
 
- sheet0.write(16,6, sum(new_numbershots),style4b)                             # G17
- sheet0.write(17,6, len(new_shotline),style4b)                                # G18
- sheet0.write(26,6, min(new_numbershots),style4b)                              # G27
- sheet0.write(27,6, max(new_numbershots),style4b)                              # G28
-#####
+ new_shotlinekm = []
+ new_shotlinedays = []
+ new_shotlinehours = []
 
+#(shotx.get()/1000.)
+ for iporra in range(0,len(new_numbershots)):
+      km = (new_numbershots[iporra]-1)*(shotx.get()/1000.)
+      new_shotlinekm.append(km)
+      thours = km/(velshot.get()*1.852)
+      tdays = thours/24
+      new_shotlinedays.append(tdays)
+      new_shotlinehours.append(thours)
+
+ sheet0.write(16,6, sum(new_numbershots),style4b)                              # G17
+ sheet0.write(17,6, len(new_shotline),style4b)                                 # G18
+ sheet0.write(18,6, round(sum(new_shotlinekm)/len(new_shotline),2),style4b)    # G19
+ sheet0.write(19,6, sum(new_shotlinekm),style4b)                               # G20
+ sheet0.write(20,6, round(sum(new_shotlinehours),2),style4b)                   # G21
+ sheet0.write(21,6, round(sum(new_shotlinedays),2),style4b)                    # G22
+ sheet0.write(22,6, round(sum(new_numbershots)/ShotArea,2),style4b)            # G23
+ sheet0.write(25,6, min(new_numbershots),style4b)                              # G26
+ sheet0.write(26,6, max(new_numbershots),style4b)                              # G27
 
  sheet3.write(0,0, "Line",style7)
  sheet3.write(0,1, "LineNum",style7)
@@ -1068,41 +1115,63 @@ def planout ():
  sheet3.write(0,3, "Lst Shot ",style7)
  sheet3.write(0,4, "Fst Shot",style7)
  sheet3.write(0,5, "Line-Km",style7)
- sheet3.write(0,6, "Line-Time",style7a)
- print ("CARALHOOOOOOOOOOOOOO")
- print ("lenght of LSP", len (lsp))
+ sheet3.write(0,6, "Line-hours",style7a)
+ sheet3.write(0,7, "Line-days",style7a)
+
+
+
  row = 1
  for Ishot in new_shotline:
      sheet3.write(row,0,row,style4b)
      sheet3.write(row,1,new_shotline[row-1],style4b)
      sheet3.write(row,2,new_numbershots[row-1],style4b)
-#     sheet3.write(row,3,lsp[row-1],style4b)
-#     sheet3.write(row,4,lsp[row-1]-new_numbershots[row-1]+1,style4b)
-     sheet3.write(row,5,(new_numbershots[row-1]-1)*(shotx.get()*2/1000.),style4b)
-     sheet3.write(row,6,(shotx.get()*2/1000.),style4b)
+     sheet3.write(row,3,lsp[row-1],style4b)
+     sheet3.write(row,4,lsp[row-1]-new_numbershots[row-1]+1,style4b)
+     sheet3.write(row,5,(new_numbershots[row-1]-1)*(shotx.get()/1000.),style4b)
+     sheet3.write(row,6,round(((new_numbershots[row-1]-1)*(shotx.get()/1000.))/(velshot.get()*1.852),2),style4b)
+     sheet3.write(row,7,round((((new_numbershots[row-1]-1)*(shotx.get()/1000.))/(velshot.get()*1.852))/24,3),style4b)
+
+#     sheet3.write(row,6,(shotx.get()*2/1000.),style4b)
      row+=1
 
 
+ sheet3.write(row,0, "Line",style7)
+ sheet3.write(row,1, "LineNum",style7)
+ sheet3.write(row,2, "Shots in line ",style7)
+ sheet3.write(row,3, "Lst Shot ",style7)
+ sheet3.write(row,4, "Fst Shot",style7)
+ sheet3.write(row,5, "Line-Km",style7)
+ sheet3.write(row,6, "Line-hours",style7a)
+ sheet3.write(row,7, "Line-days",style7a)
 
- sheet3.write(row,0, "",style7)
- sheet3.write(row,1, "",style7)
- sheet3.write(row,3, "",style7)
- sheet3.write(row,4, "",style7)
+
+ sheet3.write(row+1,0, "",style7)
+ sheet3.write(row+1,1, "",style7)
+ sheet3.write(row+1,3, "",style7)
+ sheet3.write(row+1,4, "",style7)
+
+
+
+
 
  s=""
  value=str(row)
-
+ 
  seqC=["SUM(C2:C",value,")"]
  C=s.join(seqC)
- sheet3.write(row, 2, xlwt.Formula(C),style7)
+ sheet3.write(row+1, 2, xlwt.Formula(C),style7)
 
  seqF=["SUM(F2:F",value,")"]
  F=s.join(seqF)
- sheet3.write(row, 5, xlwt.Formula(F),style7)
+ sheet3.write(row+1, 5, xlwt.Formula(F),style7)
 
  seqG=["SUM(G2:G",value,")"]
  G=s.join(seqG)
- sheet3.write(row, 6, xlwt.Formula(G),style7a)
+ sheet3.write(row+1, 6, xlwt.Formula(G),style7a)
+
+ seqH=["SUM(H2:H",value,")"]
+ H=s.join(seqH)
+ sheet3.write(row+1, 7, xlwt.Formula(H),style7a)
 
 
 
