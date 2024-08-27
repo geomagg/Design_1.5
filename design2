@@ -1146,12 +1146,12 @@ def planout ():
  sheet0.write(19,6, sum(new_shotlinekm),style4b)                               # G20
  sheet0.write(20,6, round(sum(new_shotlinehours),2),style4b)                   # G21
  sheet0.write(21,6, round(sum(new_shotlinedays),2),style4b)                    # G22
-
  sheet0.write(22,6, round(sum(new_numbershots)/ShotArea,2),style4b)            # G23
  sheet0.write(23,6, len(new_sailline),style4b)                                 # G24
-
- sheet0.write(25,6, min(new_numbershots),style4b)                              # G26
- sheet0.write(26,6, max(new_numbershots),style4b)                              # G27
+ sheet0.write(25,6, sum(new_saillinekm),style4b)                               # G25
+ sheet0.write(24,6, round(sum(new_saillinekm)/len(new_sailline),2),style4b)    # G26
+ sheet0.write(26,6, min(new_numbershots),style4b)                              # G27
+ sheet0.write(27,6, max(new_numbershots),style4b)                              # G28
 
  sheet3.write(0,0, "Line",style7)
  sheet3.write(0,1, "LineNum",style7)
