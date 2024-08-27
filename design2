@@ -822,9 +822,6 @@ def planout ():
  sheet0.write(8,5, "      ",style6)
  sheet0.write(8,6, "      ",style6a)
 
-
-
-
  sheet0.write(2,0, ProjName.get(),style4e)
  sheet0.write(4,0, Co.get(),style4e)
  sheet0.write(4,2, Option.get(),style4e)
@@ -903,9 +900,9 @@ def planout ():
  sheet0.write(19,1, "",style4e)                                             # B20
  sheet0.write(19,2,min(numnodesline) ,style4b)                              # C20
 
- sheet0.write(20,0, "Line direction:",style4e)                              # A21
+ sheet0.write(20,0, "Line dir (degrees):",style4e)                          # A21
  sheet0.write(20,1, "",style4e)                                             # B21
- sheet0.write(20,2, anglex.get(),style4b)                                   # C21
+ sheet0.write(20,2, (float(anglex.get()+90.)-ort.get()*90.),style4b)         # C21
 
  sheet0.write(21,0, "Nodes area sqKm:",style4e)                             # A22
  sheet0.write(21,1, "",style4e)                                             # B22
@@ -918,7 +915,6 @@ def planout ():
  sheet0.write(23,0, "Aphotema",style4e)                                     # A23
  sheet0.write(23,1, "",style4e)                                             # B23
  sheet0.write(23,2, apothema,style4b)                                       # C23
-
 
 #Shots
 
@@ -995,12 +991,11 @@ def planout ():
 
  sheet0.write(28,4, "Line dir (degrees):",style4d)                          # E29
  sheet0.write(28,5, "",style4d)                                             # F29
- sheet0.write(28,6, anglexa.get(),style4b)                                  # G29
+ sheet0.write(28,6, float(anglexa.get()+ort1.get()*90.),style4b)            # G29
 
  sheet0.write(29,4, "Shot area sqKm:",style4d)                              # E30
  sheet0.write(29,5, "",style4d)                                             # F30
  sheet0.write(29,6, round(ShotArea,2),style4b)                              # G30
-#
 
 # Sheet 1  Nodes and Nodes Lines
 
@@ -1010,7 +1005,8 @@ def planout ():
  sheet1.write(0,3, "Lst Node ",style6)
  sheet1.write(0,4, "# Nodes",style6)
  sheet1.write(0,5, "Line-Km",style6)
- sheet1.write(0,6, "Line-Time",style6)
+ sheet1.write(0,6, "Line-Hrs",style6)
+ sheet1.write(0,7, "Line-Days",style6)
 
 #FOCA1
  nodevel = float(velnode.get())*1.852
@@ -1023,34 +1019,35 @@ def planout ():
          sheet1.write(row,4,LNL[Inode]-FNL[Inode]+1,style4b)
          sheet1.write(row,5,(LNL[Inode]-FNL[Inode])*dx,style4b)
          sheet1.write(row,6,round((LNL[Inode]-FNL[Inode])*(dx/nodevel),3),style4b)
+         sheet1.write(row,7,round(((LNL[Inode]-FNL[Inode])*(dx/nodevel))/24,3),style4b)
          row+=1
 
- sheet1.write(row,0, "",style6)
  sheet1.write(row,1, "",style6)
  sheet1.write(row,2, "",style6)
  sheet1.write(row,3, "",style6)
-# sheet1.write(row,4, "",style6)
-# sheet1.write(row,5, "",style6)
-# sheet1.write(row,6, "",style6)
-# sheet1.write(row+4,3,float(velnode.get())*1.852,style4b)
 
  s=""
-
  value=str(row)
+
+ seqA=["COUNT(A2:A",value,")"]
+ A=s.join(seqA)
+ sheet1.write(row, 0, xlwt.Formula(A),style6)
+
  seqE=["SUM(E2:E",value,")"]
  E=s.join(seqE)
  sheet1.write(row, 4, xlwt.Formula(E),style6)
 
- value=str(row)
  seqF=["SUM(F2:F",value,")"]
  F=s.join(seqF)
  sheet1.write(row, 5, xlwt.Formula(F),style6)
 
- value=str(row)
  seqG=["SUM(G2:G",value,")"]
  G=s.join(seqG)
- sheet1.write(row, 6, xlwt.Formula(G),style6a)
+ sheet1.write(row, 6, xlwt.Formula(G),style6)
 
+ seqH=["SUM(H2:H",value,")"]
+ H=s.join(seqH)
+ sheet1.write(row, 7, xlwt.Formula(H),style6a)
 
 # Sheet 2   Nodes Polygon
  inext = 0
