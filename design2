@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -37,285 +38,222 @@ root.config(menu=menu)
 #filemenu.add_command(label="Shot polygon file", command=OpenFile)
 #filemenu.add_command(label="EXIT", command=root.quit)
 helpmenu = Menu(menu)
-menu.add_cascade(label="Help",font=("Sans Bold", 10), menu=helpmenu)
-
+menu.add_cascade(label="Help",font=("Sans Bold", 8), menu=helpmenu)
 helpmenu.add_command(label="About", command=About)
 
 photo = PhotoImage(file='geomagg3.png')
-photo = photo.subsample(1)
+photo = photo.subsample(2)
 photo_label = Label(root, image=photo)
 photo_label.image = photo 
 photo_label.grid()
 
-Label(root, text='Design 1.5  ',font=("Sans Bold", 10)).grid(row=0,column=5,sticky=NE)
-Frame(root, bg="black",width=3, height=3)
+Label(root, text='Design 1.51  ',font=("Sans Bold", 8)).grid(row=0,column=5,sticky=NE)
+Frame(root, bg="black",width=400, height=400)
 
 fp = open("polipar1", 'r')
 par1,par2=[],[]
 reader = csv.reader(fp, delimiter=' ')
-
 for row in reader:
     par1.append(row[0])
     par2.append(row[1])
 fp.close()
 
-#    BLOCO  1
-
-Label(root, text="--------------------------------------------------").grid(row=2, column=5,sticky=E)
-Label(root, text="  Nodes Grid Computation  ",font=("Sans Bold", 12),width=20).grid(row=2, column=4)
-Label(root, text="--------------------------------------------------").grid(row=2, column=5, sticky=E)
-Label(root, text="       ").grid(row=3, column=3, sticky=E)
-
-Label(root, text="Nodes space X (m):      ",font=("Sans Bold", 9)).grid(row=3, column=3,sticky='w')
+#------------ BLOCO  1 ------------------------------------------------------------------------
+#######
+Label(root, text="_______________________").grid(row=1, column=2, sticky=W)
+Label(root, text="Nodes Parameters   ",font=("Sans Bold", 11)).grid(row=2, column=2, sticky=W)
+#######
+Label(root, text="Nodes space X (m):",font=("Sans Bold", 8)).grid(row=3, column=2,sticky='w')
 nodex = DoubleVar()
-Entry(root, width=8, textvariable=nodex,font=("Sans Bold", 9)).grid(row=3, column=3,sticky='e')
+Entry(root, width=10, textvariable=nodex,font=("Sans Bold", 8)).grid(row=3, column=3,sticky='w')
 nodex.set(par1[0])
-
-Label(root, text="Nodes space Y (m): ",font=("Sans Bold", 9)).grid(row=3, column=5,sticky='w')
-nodey = DoubleVar()
-Entry(root, width=8, textvariable=nodey,font=("Sans Bold", 9)).grid(row=3, column=5,sticky='e')
+Label(root, text="       Nodes space Y (m):",font=("Sans Bold", 8)).grid(row=3, column=4,sticky='w')
+nodey = DoubleVar()  
+Entry(root, width=10, textvariable=nodey,font=("Sans Bold", 8)).grid(row=3, column=5,sticky='w')
 nodey.set(par2[0])
-
-Label(root, text="Node grid origx ",font=("Sans Bold", 9)).grid(row=4, column=3,sticky='w')
+#######
+Label(root, text="Node grid origx",font=("Sans Bold", 8)).grid(row=4, column=2,sticky='w')
 origx = DoubleVar()
-Entry(root, width=8, textvariable=origx,font=("Sans Bold", 9)).grid(row=4, column=3,sticky='e')
+Entry(root, width=10, textvariable=origx,font=("Sans Bold", 8)).grid(row=4, column=3,sticky='w')
 origx.set(par1[1])
-
-Label(root, text="Node grid origy: ",font=("Sans Bold", 9)).grid(row=4, column=5,sticky='w')
+Label(root, text="      Node grid origy: ",font=("Sans Bold", 8)).grid(row=4, column=4,sticky='w')
 origy = DoubleVar()
-Entry(root, width=8, textvariable=origy,font=("Sans Bold", 9)).grid(row=4, column=5,sticky='e')
+Entry(root, width=10, textvariable=origy,font=("Sans Bold", 8)).grid(row=4, column=5,sticky='w')
 origy.set(par2[1])
-
-Label(root, text="Node angle, X-direction (Deg): ",font=("Sans Bold", 9)).grid(row=5, column=3,sticky='w')
-anglex = DoubleVar()
-Entry(root, width=8, textvariable=anglex,font=("Sans Bold", 9)).grid(row=5, column=3,sticky='e')
-anglex.set(par1[2])
-
-Label(root, text="Range X (m): ",font=("Sans Bold", 9)).grid(row=6, column=3,sticky='w')
-rngx = DoubleVar()
-Entry(root, width=8, textvariable=rngx,font=("Sans Bold", 9)).grid(row=6, column=3,sticky='e')
-rngx.set(par1[3])
-
-Label(root, text="Range Y (m): ",font=("Sans Bold", 9)).grid(row=6, column=5,sticky='w')
+##########
+Label(root, text="Range X (m): ",font=("Sans Bold", 8)).grid(row=5, column=2,sticky='w')
 rngy = DoubleVar()
-Entry(root, width=8, textvariable=rngy,font=("Sans Bold", 9)).grid(row=6, column=5 ,sticky='e')
+Entry(root, width=10, textvariable=rngy,font=("Sans Bold", 8)).grid(row=5, column=3 ,sticky='w')
 rngy.set(par2[3])
-
+Label(root, text="       Range Y (m): ",font=("Sans Bold", 8)).grid(row=5, column=4, sticky='w')
+rngx = DoubleVar()
+Entry(root, width=10, textvariable=rngx,font=("Sans Bold", 8)).grid(row=5, column=5,sticky='w')
+rngx.set(par1[3])
+############
+Label(root, text="Node Line dir (Deg): ",font=("Sans Bold", 8)).grid(row=6, column=2,sticky='w')
+anglex = DoubleVar()
+Entry(root, width=10, textvariable=anglex,font=("Sans Bold", 8)).grid(row=6, column=3,sticky='w')
+anglex.set(par1[2])
+###########
 #---------------------------------------------------------------
-
-Label(root, text="       ").grid(row=7, column=3, sticky=E)
-
+########
 v = IntVar()
 v.set(par2[11])
-languages = [
-    ("Hexagonal"),
-    ("Alternate"),
-    ("Rectangular"),
-]
+languages = [("Hexagonal"),("Alternate"),("Rectangular"),]
 def ShowChoice():
     print(v.get())
-Label(root, text="""Grid options""",font=("Sans Bold", 10),fg = 'blue',
-         padx = 20).grid(row =9, column=3,sticky=W)
 for val, language in enumerate(languages):
-            Radiobutton(root, 
-                  text=language,
-                  padx = 40, 
-                  variable=v, 
-                  command=ShowChoice,
-                  value=val,font=("Sans Bold", 9),fg = 'blue').grid(row =10+val, column=3,sticky=W)
+       Radiobutton(root,text=language,padx = 2,variable=v,command=ShowChoice,
+       value=val,font=("Sans Bold", 8),fg ='blue').grid(row =7+val, column=2,sticky=W)
+########
 #--------------------------------------------------------------
+###########
 ort = IntVar()
 ort.set(0)  
-languages = [
-    ("Parallel"),
-    ("Orthogonal"),
-]
+languages = [("Parallel"),("Orthogonal"),]
 def ShowChoice():
     print(ort.get())
-Label(root, text="""Survey mode""",font=("Sans Bold", 10), fg = 'blue',padx = 20).grid(row =9, column=5,sticky=W)
 for val, language in enumerate(languages):
     Radiobutton(root, 
-                  text=language,
-                  padx = 20, 
-                  variable=ort, 
-                  command=ShowChoice,
-                  value=val,font=("Sans Bold", 9),fg = 'blue').grid(row =10+val, column=5,sticky=W)
+     text=language, padx = 2, variable=ort, command=ShowChoice,
+     value=val,font=("Sans Bold", 8),fg = 'blue').grid(row =7+val, column=4,sticky=W)
+##########
 
-#----------------------------------------------------------
-#         BLOCO 2
-
-Label(root, text="       ").grid(row=11, column=3, sticky=E)
-
-Label(root, text="--------------------------------------------------------").grid(row=14, column=3, sticky=E)
-Label(root, text="  Shots  Grid computation   ",font=("Sans Bold", 12)).grid(row=14, column=4)
-Label(root, text="--------------------------------------------------------").grid(row=14, column=5, sticky=E)
-
-Label(root, text="       ").grid(row=14, column=3, sticky=E)
-
-Label(root, text="Pop space (m):      ",font=("Sans Bold", 9)).grid(row=17, column=3,sticky='w')
+# BLOCO 2 ---------------------------------------------------------------------------
+Label(root, text="_______________________").grid(row=10, column=2, sticky=W)
+Label(root, text="Shots Parameters   ",font=("Sans Bold", 11)).grid(row=11, column=2, sticky=W)
+#########
+Label(root, text="Pop space (m):      ",font=("Sans Bold", 8)).grid(row=12, column=2,sticky='w')
 shotx = DoubleVar()
-Entry(root, width=8, textvariable=shotx,font=("Sans Bold", 9)).grid(row=17, column=3,sticky='e')
+Entry(root, width=8, textvariable=shotx,font=("Sans Bold", 8)).grid(row=12, column=3,sticky='w')
 shotx.set(par1[4])
-
-Label(root, text="  Number of Sources",font=("Sans Bold", 9)).grid(row=17, column=4,sticky='w')
-Nsources = DoubleVar()
-Entry(root, width=8, textvariable=Nsources,font=("Sans Bold", 9)).grid(row=17, column=4,sticky='e')
-Nsources.set(par1[11])
-
-Label(root, text="  Array separation Y- direction (m): ",font=("Sans Bold", 9)).grid(row=17, column=5,sticky='w')
+Label(root, text="  Array separation Y(m): ",font=("Sans Bold", 8)).grid(row=12, column=4,sticky='w')
 shoty = DoubleVar()
-Entry(root, width=8, textvariable=shoty,font=("Sans Bold", 9)).grid(row=17, column=5,sticky='e')
+Entry(root, width=8, textvariable=shoty,font=("Sans Bold", 8)).grid(row=12, column=5,sticky='w')
 shoty.set(par2[4])
-
-Label(root, text="Shot grid origx: ",font=("Sans Bold", 9)).grid(row=18, column=3,sticky='w')
+########
+Label(root, text="Grid orig x: ",font=("Sans Bold", 8)).grid(row=13, column=2,sticky='w')
 origxa = DoubleVar()
-Entry(root, width=8, textvariable=origxa,font=("Sans Bold", 9)).grid(row=18, column=3,sticky='e')
+Entry(root, width=8, textvariable=origxa,font=("Sans Bold", 8)).grid(row=13, column=3,sticky='w')
 origxa.set(par1[5])
-
-Label(root, text="  Shot grid origy: ",font=("Sans Bold", 9)).grid(row=18, column=5,sticky='w')
+Label(root, text="  Grid orig y: ",font=("Sans Bold", 8)).grid(row=13, column=4,sticky='w')
 origya = DoubleVar()
-Entry(root, width=8, textvariable=origya,font=("Sans Bold", 9)).grid(row=18, column=5,sticky='e')
+Entry(root, width=8, textvariable=origya,font=("Sans Bold", 8)).grid(row=13, column=5,sticky='w')
 origya.set(par2[5])
-
-Label(root, text="  Shot angle,  X-direction (Deg): ",font=("Sans Bold", 9)).grid(row=19, column=3,sticky='w')
+###########
+Label(root, text="Shot Line dir (Deg): ",font=("Sans Bold", 8)).grid(row=14, column=2,sticky='w')
 anglexa = DoubleVar()
-Entry(root, width=8, textvariable=anglexa,font=("Sans Bold", 9)).grid(row=19, column=3,sticky='e')
+Entry(root, width=8, textvariable=anglexa,font=("Sans Bold", 8)).grid(row=14, column=3,sticky='w')
 anglexa.set(par1[6])
-
-Label(root, text="  Shot grid range x (m): ",font=("Sans Bold", 9)).grid(row=20, column=3,sticky='w')
-rngxa = DoubleVar()
-Entry(root, width=8, textvariable=rngxa,font=("Sans Bold", 9)).grid(row=20, column=3,sticky='e')
-rngxa.set(par1[7])
-
-Label(root, text="  Shot grid range y (m): ",font=("Sans Bold", 9)).grid(row=20, column=5,sticky='w')
-rngya = DoubleVar()
-Entry(root, width=8, textvariable=rngya,font=("Sans Bold", 9)).grid(row=20, column=5,sticky='e')
-rngya.set(par2[7])
-
-Label(root, text="  Shot polygon halo (m): ",font=("Sans Bold", 9)).grid(row=19, column=5,sticky='w')
+Label(root, text="  Halo (m): ",font=("Sans Bold", 8)).grid(row=14, column=4,sticky='w')
 halo = DoubleVar()
-Entry(root, width=8, textvariable=halo,font=("Sans Bold", 9)).grid(row=19, column=5,sticky='e')
+Entry(root, width=8, textvariable=halo,font=("Sans Bold", 8)).grid(row=14, column=5,sticky='w')
 halo.set(par2[6])
-
-#-----------------------------------------------------------------
-Label(root, text="       ").grid(row=24, column=3, sticky=E)
-
-v1 = IntVar()
-v1.set(0)  
-lname = "Hexagonal Shooting"
-
+########
+Label(root, text="Range x (m): ",font=("Sans Bold", 8)).grid(row=15, column=2,sticky='w')
+rngxa = DoubleVar()
+Entry(root, width=8, textvariable=rngxa,font=("Sans Bold", 8)).grid(row=15, column=3,sticky='w')
+rngxa.set(par1[7])
+Label(root, text="  Range  y (m): ",font=("Sans Bold", 8)).grid(row=15, column=4,sticky='w')
+rngya = DoubleVar()
+Entry(root, width=8, textvariable=rngya,font=("Sans Bold", 8)).grid(row=15, column=5,sticky='w')
+rngya.set(par2[7])
+##########
+#-----------------------------------------------------------------------------
+######
+nfontes = IntVar()
+option = int(par1[11])
+nfontes.set(option)
+lname = [("Single Source"), ("Dual Source"), ("Triple Source"),]
 def ShowChoice():
-    print(v1.get())
-Label(root, text="""Grid options""",font=("Sans Bold", 10),fg = 'blue',
-    padx = 20).grid(row =25, column=3, sticky=W)
-Radiobutton(root,text=lname,padx = 20,variable=v1, 
-    command=ShowChoice,value=1,font=("Sans Bold", 9),fg = 'blue').grid(row =26, column=3, sticky=W)
+    print(nfontes.get())
+for val, lname in enumerate(lname):
+  Radiobutton(root,text=lname, variable=nfontes,
+      command=ShowChoice,value=val+1,font=("Sans Bold", 8),fg = 'blue').grid(row =18+val, 
+      column=2, sticky=W)
+#########
 #------------------------------------------------------------------
-
+#########
 ort1 = IntVar()
 ort1.set(0)  
-languages = [
-    ("Parallel"),
-    ("Orthogonal"),
-]
+languages = [("Parallel"),("Orthogonal"),]
+
 def ShowChoice():
     print(ort1.get())
-Label(root, text="""Survey mode""",font=("Sans Bold", 10),fg = 'blue',
-         padx = 20).grid(row =25, column=5,sticky=W)
 for val, language in enumerate(languages):
-    Radiobutton(root, 
-                  text=language,
-                  padx = 20, 
-                  variable=ort1, 
-                  command=ShowChoice,
-                  value=val,font=("Sans Bold", 9),fg = 'blue').grid(row =26+val, column=5,sticky=W)
-
-
-Label(root, text="       ").grid(row=24, column=3, sticky=E)
+    Radiobutton(root,text=language,padx=2,variable=ort1, command=ShowChoice,
+    value=val,font=("Sans Bold", 8),fg = 'blue').grid(row =18+val, column=4,sticky=W)
+#######
+###_-------------------------------------------------------------------------------
+######
 root1 = Frame(root)
 tkvar = StringVar(root1)
- # Dictionary with options
 choices = { 'ProvidedPolygon','CaioExpansion'}
 tkvar.set('ProvidedPolygon') # set the default option 
-
 popupMenu = OptionMenu(root, tkvar, *choices)
 popupMenu.config(font=('Impact',9))
-
 menu = popupMenu.nametowidget(popupMenu.menuname)
 menu.configure(font=('Impact', 9))
-
-Label(root, text="Polygon expansion method",font=("Sans Bold", 8)).grid(row = 26, column = 4)
-popupMenu.grid(row = 27, column=4)
+#Label(root, text="Polygon expansion method",font=("Sans Bold", 8)).grid(row=13, column=0, sticky=W)
+popupMenu.grid(row = 11, column=0, sticky=W)
 # on change dropdown value
 def change_dropdown(*args):
     print( tkvar.get() )
 # link function to change dropdown
 tkvar.trace('w', change_dropdown)
-
-#----------------------------------------------------------------------------------------------------------------
-#      BLOCO 3
-
-Label(root, text="       ").grid(row=28, column=3, sticky=E)
-
-Label(root, text="---------------------------------------------------------").grid(row=29, column=3, sticky=E)
-Label(root, text="  Survey  parameters ",font=("Sans Bold", 12)).grid(row=29, column=4)
-Label(root, text="---------------------------------------------------------").grid(row=29, column=5, sticky=E)
-
-Label(root, text="       ").grid(row=30, column=3, sticky=E)
-
-Label(root, text="SV vessel speed (knots): ",font=("Sans Bold", 9)).grid(row=31, column=3,sticky='w')
+#############
+# BLOCO 3 ---------------------------------------------------------------------------
+Label(root, text="_______________________").grid(row=20, column=2, sticky=W)
+Label(root, text="Survey Parameters  ",font=("Sans Bold", 11)).grid(row=21, column=2, sticky=W)
+#########
+Label(root, text="Source speed (kts): ",font=("Sans Bold", 8)).grid(row=22, column=2,sticky='w')
 velshot = DoubleVar()
-Entry(root, width=8, textvariable=velshot,font=("Sans Bold", 9)).grid(row=31, column=3,sticky='e')
+Entry(root, width=8, textvariable=velshot,font=("Sans Bold", 8)).grid(row=22, column=3,sticky='w')
 velshot.set("4.6")
-
-Label(root, text="Node vessel speed (knots): ",font=("Sans Bold", 9)).grid(row=31, column=5,sticky='w')
+Label(root, text="   ROV speed (kts): ",font=("Sans Bold", 8)).grid(row=22, column=4,sticky='w')
 velnode = DoubleVar()
-Entry(root, width=8, textvariable=velnode,font=("Sans Bold", 9)).grid(row=31, column=5,sticky='e')
+Entry(root, width=8, textvariable=velnode,font=("Sans Bold", 8)).grid(row=22, column=5,sticky='w')
 velnode.set("1.")
-
-Label(root, text="SV line chg avg time (Hr) : ",font=("Sans Bold", 9)).grid(row=32, column=3,sticky='w')
+#########
+Label(root, text="Line chg (Hours) : ",font=("Sans Bold", 8)).grid(row=23, column=2,sticky='w')
 chglinetime = DoubleVar()
-Entry(root, width=8, textvariable=chglinetime,font=("Sans Bold", 9)).grid(row=32, column=3,sticky='e')
+Entry(root, width=8, textvariable=chglinetime,font=("Sans Bold", 8)).grid(row=23, column=3,sticky='w')
 chglinetime.set(".5")
-
-Label(root, text="Maximum offset (m): ",font=("Sans Bold", 9)).grid(row=32, column=5,sticky='w')
+Label(root, text="   Maxoffset (m): ",font=("Sans Bold", 8)).grid(row=23, column=4,sticky='w')
 MaxOff = DoubleVar()
-Entry(root, width=8, textvariable=MaxOff,font=("Sans Bold", 9)).grid(row=32, column=5,sticky='e')
+Entry(root, width=8, textvariable=MaxOff,font=("Sans Bold", 8)).grid(row=23, column=5,sticky='w')
 MaxOff.set(8000)
-
-Label(root, text="Node Lines Before Shooting : ",font=("Sans Bold", 9)).grid(row=33, column=3,sticky='w')
+########
+Label(root, text="Lines before shot: ",font=("Sans Bold", 8)).grid(row=24, column=2,sticky='w')
 PreNodeLines = DoubleVar()
-Entry(root, width=8, textvariable=PreNodeLines,font=("Sans Bold", 9)).grid(row=33, column=3,sticky='e')
+Entry(root, width=8, textvariable=PreNodeLines,font=("Sans Bold", 8)).grid(row=24, column=3,sticky='w')
 PreNodeLines.set("3")
-
-Label(root, text="ESPG : ",font=("Sans Bold", 9)).grid(row=33, column=5,sticky='w')
+Label(root, text="   ESPG : ",font=("Sans Bold", 8)).grid(row=24, column=4,sticky='w')
 espg = StringVar()
-Entry(root, width=10, textvariable=espg,font=("Sans Bold", 9)).grid(row=33, column=5,sticky='e')
+Entry(root, width=10, textvariable=espg,font=("Sans Bold", 8)).grid(row=24, column=5,sticky='w')
 espg.set(par2[9])
-
-Label(root, text="Project :     ",font=("Sans Bold", 9)).grid(row=34, column=3,sticky=W)
+#########
+Label(root, text="Project :     ",font=("Sans Bold", 8)).grid(row=25, column=2,sticky=W)
 ProjName = StringVar()
-Entry(root, width=10, textvariable=ProjName,font=("Sans Bold", 9)).grid(row=34, column=3,sticky='e')
+Entry(root, width=10, textvariable=ProjName,font=("Sans Bold", 8)).grid(row=25, column=3,sticky='w')
 ProjName.set(par1[8])
-
-Label(root, text="Client :     ",font=("Sans Bold", 9)).grid(row=34, column=5,sticky=W)
+Label(root, text="   Client :     ",font=("Sans Bold", 8)).grid(row=25, column=4,sticky=W)
 Co = StringVar()
-Entry(root, width=10, textvariable=Co,font=("Sans Bold", 9)).grid(row=34, column=5,sticky='e')
+Entry(root, width=10, textvariable=Co,font=("Sans Bold", 8)).grid(row=25, column=5,sticky='w')
 Co.set(par2[8])
-
-Label(root, text="Option : ",font=("Sans Bold", 9)).grid(row=35, column=3,sticky=W)
+#########
+Label(root, text="Option : ",font=("Sans Bold", 8)).grid(row=26, column=2,sticky=W)
 Option = StringVar()
-Entry(root, width=10, textvariable=Option,font=("Sans Bold", 9)).grid(row=35, column=3,sticky='e')
+Entry(root, width=10, textvariable=Option,font=("Sans Bold", 8)).grid(row=26, column=3,sticky='w')
 Option.set(par1[9])
-
-Label(root, text="Version : ",font=("Sans Bold", 9)).grid(row=35, column=3,sticky=W)
+########
+Label(root, text="Vers: ",font=("Sans Bold", 8)).grid(row=27, column=2,sticky=W)
 Version = StringVar()
-Entry(root, width=20, textvariable=Version,font=("Sans Bold", 9)).grid(row=35, column=3,sticky='e')
+Entry(root, width=20, textvariable=Version,font=("Sans Bold", 8)).grid(row=27, column=3,sticky='w')
 Version.set(par1[10])
-Label(root, text="  ").grid(row=36, column=3, sticky=E)
-
+########
 #---------------------------------------------NODES PLOT SELECT--------------------------------------------------------
-
+########
 var1a = IntVar()
 Checkbutton(root, text=' Plot node polygon  ',font=("Sans Bold", 9), variable=var1a ).grid(row =3, column=0, sticky=W)
 var1a.set("1")
@@ -325,25 +263,23 @@ var1b.set("1")
 var1c = IntVar()
 Checkbutton(root, text=' Plot node grid origin  ',font=("Sans Bold", 9), variable=var1c ).grid(row =5, column=0, sticky=W)
 var1c.set("1")
-
+##########
 #---------------------------------------------GRID PLOT SELECT -------------------------------------------------------------
-
+########
 var2a = IntVar()
-Checkbutton(root, text=' Plot shot polygon ',font=("Sans Bold", 9), variable=var2a ).grid(row =11, column=0,sticky=W)
+Checkbutton(root, text=' Plot shot polygon ',font=("Sans Bold", 9), variable=var2a ).grid(row =6, column=0,sticky=W)
 var2a.set=("0")
 var2b = IntVar()
-Checkbutton(root, text=' Plot grid points  ',font=("Sans Bold", 9), variable=var2b ).grid(row =12, column=0, sticky=W)
+Checkbutton(root, text=' Plot grid points  ',font=("Sans Bold", 9), variable=var2b ).grid(row =7, column=0, sticky=W)
 var2b.set("0")
 var2c = IntVar()
-Checkbutton(root, text=' Plot grid origin  ',font=("Sans Bold", 9), variable=var2c ).grid(row =13, column=0, sticky=W)
+Checkbutton(root, text=' Plot grid origin  ',font=("Sans Bold", 9), variable=var2c ).grid(row =8, column=0, sticky=W)
 var2c.set("0")
-
-#------------------Reading  Node polygon-----------------------------
+#########
+#------------------Reading  Node polygon---------------------------------------------------------------------
 
 def rnodes():
-
  global xp,yp
-
  X=[]
  xp,yp=[],[]
 
@@ -361,14 +297,7 @@ def rnodes():
  ring = LinearRing(X)
  s=Polygon(ring)
 
-#-----------------------------------------------
-#os.remove("Design_log.txt")
-## writer = MyWriter(sys.stdout, 'Design_log.txt')
-## sys.stdout = writer
-#-----------------------------------------------
  global NodeArea
-# global GridNodes
-# global nnx, nny
 
  NodeArea=PO.getarea()
  print ('     ')
@@ -486,7 +415,7 @@ def rshots():
  global NumberofSailPoints
  global NumberofSailLines 
  global ShotArea
- global nsources,dxa,dya
+ global nsources,nfontes,dxa,dya
  global NumberofShotPoints,NumberofShotLines,AvSailKm_1,AvShotKm_1,TotalShootTimeHours,TotalShootTimeDays
  global ShotsPerKm2,LinearSailKm,LinearShotKm
 
@@ -533,7 +462,6 @@ def rshots():
  polyshot = Polygon(X3)
  ring = LinearRing(X3)
  s = Polygon(ring)
-# global ShotArea
  ShotArea = s.area/1000000
  print ('     ')
  print ('Shot poligons -------------------------------')
@@ -552,9 +480,7 @@ def rshots():
  y0a=origya.get()
  dxa=shotx.get()
  dya=shoty.get()
- ##VesselSpeed=BoatSpeed.get()
- ##RecordLength=DesiredRecordLength.get()
- nsources = Nsources.get()
+ nsources = nfontes.get()        #Nsources.get()
  anglea = anglexa.get()
  angleb=anglea  
  o1=ort1.get()
@@ -596,7 +522,6 @@ def rshots():
  upt=0
  progress=1./ntotal
 
-#UBA1
  SailLineInterval = dya    # Adjascent arrays separation. 
  SailPointInterval = dyb   # pop interval
  FirstSailLine = 1
@@ -645,6 +570,7 @@ def rshots():
  if nsources==3:
      interv=2
      adv=0
+
 #  Initalizing the shot statistic counter 
  NumberofShotPoints = 0
  NumberofSailPoints = 0
@@ -695,7 +621,6 @@ def rshots():
 
 #-------------------
 
-
     NumberofSailLines = NumberofSailLines + 1
     NumberofShotLines = NumberofShotLines + nsources 
     NumberofShotPointsPerLine = NumberofShotPointsPerLine + 1
@@ -705,8 +630,6 @@ def rshots():
  a.close()
 
 
-## if NumberofShotPoints ==0:
-##  messagebox.showinfo("Information","Check x0 and y0")
  print ('     ')
  print ('Shot Grid  -------------------------------')
  print ('Shot Point Interval (m) =' ,nsources*dxa)
@@ -715,41 +638,9 @@ def rshots():
  print ('Lateral distance of arrays (m) =' ,dya)
  print ('Sail Line Interval (m) =' ,dya*nsources)
  print ('Shot Point Interval (m) =' ,dxa) 
- #print ('Shooting Boal speed (m) =' , VesselSpeed)
- #print ('Desired Record Length (m) =' , RecordLength)
  print ('Bin x (m) =' , dxa*nsources/2 )
  print ('Bin y (m) =' , dya*nsources/2 )
 
- print ('Total number of shot points=' , NumberofShotPoints)
- print ('Total number of sail points=' , NumberofSailPoints)
- print ('Total number of Shot lines=' , NumberofShotLines)
- print ('Total number of Sail lines=' , NumberofSailLines)
- print ('Number of Sail Points per line=' , NumberofSailPointsPerLine)
- print ('Number of Shot Points per line=' , NumberofShotPointsPerLine)
-
- AvSailKm_1 = round(((NumberofSailPoints-(NumberofSailLines))*((nsources*dxb)/1000.))/NumberofSailLines,2)
- AvSailKm_2 = round((((NumberofSailPointsPerLine-1)*(dxa*nsources))/1000.),2)
- AvShotKm_1 = round(((NumberofShotPoints-(NumberofShotLines))*((nsources*dxa)/1000.))/NumberofShotLines,2)
- AvShotKm_2 = round((((NumberofShotPointsPerLine-1)*(dxa*nsources))/1000.),2)
- LinearSailKm = round(((NumberofSailPointsPerLine-1)*((dxb*nsources)/1000))* NumberofSailLines,2)
- LinearShotKm = round(((NumberofShotPointsPerLine-1)*((dxa*nsources)/1000))* NumberofShotLines,2)
- TotalShootTimeHours =((NumberofSailPointsPerLine-1)*((dxb*nsources)/(1000.*7.408)))* NumberofSailLines
- TotalShootTimeDays = ((NumberofSailPointsPerLine-1)*((dxb*nsources)/(1000.*(24.*7.408))))* NumberofSailLines
- ShotsPerKm2 =round(ShotArea/LinearShotKm,2)
-
- print ('Average Km / Sail Line 1 =', AvSailKm_1)
- print ('Average Km / Sail Line 2 =', AvSailKm_2)
- print ('Average Km / Shot Line 1 =', AvShotKm_1)
- print ('Average Km / Shot Line 2 =', AvShotKm_2)
-#PORRA 5.0
- print ('Shot area Km**2 = ', ShotArea)
- print ('Total Linear Sail Km =', LinearSailKm)
- print ('Total Linear Shot Km =', LinearShotKm)
- print ('Total shoot time hours @ 4 knots= %8.2f' % (TotalShootTimeHours))
- print ('Total shoot time days @ 4Knts = %8.2f' % (TotalShootTimeDays))
- print ('Shots/Km2' , ShotsPerKm2)
- print ("dxa,dxb",  dxa,dxb)
- print ('         ')
 
  upt=upt+progress
  a.close()
@@ -760,9 +651,6 @@ def rshots():
 
 #--------------------------------------------------------------------------------------------------
 def planout ():
-
-# f1 = open("nodes.txt", 'r')
-# f2 = open("shots.txt", 'r')
 
 # img = Image.open("geomagg3.bmp")
 # r, g, b, a = img.split()
@@ -778,7 +666,6 @@ def planout ():
  sheet4 = book.add_sheet("Shots_polygon")
  sheet5 = book.add_sheet("Fold x Offset")
  sheet6 = book.add_sheet("Grids")
-
 
 # Defining styles
  style= xlwt.easyxf(' font: name Arial, bold on; borders: left thick,  right thick,top thick, bottom thick;  pattern: pattern solid, fore_colour gray25 ;')
@@ -814,13 +701,13 @@ def planout ():
  sheet0.write(0,5, "      ",style6)
  sheet0.write(0,6, "      ",style6a)
 
- sheet0.write(8,1, "      ",style6)
- sheet0.write(8,0, "Nodes",style6b)
- sheet0.write(8,2, "      ",style6)
- sheet0.write(8,3, "      ",style6)
- sheet0.write(8,4, "Shots      ",style6)
- sheet0.write(8,5, "      ",style6)
- sheet0.write(8,6, "      ",style6a)
+ sheet0.write(9,1, "      ",style6)
+ sheet0.write(9,0, "Nodes",style6b)
+ sheet0.write(9,2, "      ",style6)
+ sheet0.write(9,3, "      ",style6)
+ sheet0.write(9,4, "Shots      ",style6)
+ sheet0.write(9,5, "      ",style6)
+ sheet0.write(9,6, "      ",style6a)
 
  sheet0.write(2,0, ProjName.get(),style4e)
  sheet0.write(4,0, Co.get(),style4e)
@@ -856,7 +743,7 @@ def planout ():
   geometry ='Rectangular'
   apothema = nodex.get()
 
-# Sheet 0 
+# Sheet 0 -------------------------------------------------------------------------------------------- 
 
 # Nodes
 
@@ -877,7 +764,7 @@ def planout ():
  sheet0.write(13,2, len(LineNumber),style4b)                                # C14
 
  sheet0.write(14,0, "Total line length (Km):",style4e)                      # A15
- sheet0.write(14,1, ":",style4e)                                            # B15
+ sheet0.write(14,1, "",style4e)                                            # B15
  sheet0.write(14,2, sum(kmline),style4b)                                    # C15
 
  sheet0.write(15,0, "Average line length (Km):",style4e)                    # A16
@@ -916,9 +803,23 @@ def planout ():
  sheet0.write(23,1, "",style4e)                                             # B23
  sheet0.write(23,2, apothema,style4b)                                       # C23
 
+ sheet0.write(24,0, "Record length (s)",style4e)                            # A24
+ sheet0.write(24,1, "",style4e)                                             # B24
+
+ sheet0.write(25,0, "Sample rate (ms)",style4e)                             # A25
+ sheet0.write(25,1, "",style4e)                                             # B25
+
+ sheet0.write(26,0, "Component numbers",style4e)                            # A26
+ sheet0.write(26,1, "",style4e)                                             # B26
+
+ sheet0.write(27,0, "Size of CRG - 8000m (TB)",style4e)                     # A27
+ sheet0.write(27,1, "",style4e)                                             # B27
+
+
+
 #Shots
 
- nsources = Nsources.get()
+ nsources = nfontes.get()
  dxa=2*shotx.get()
  dya=shoty.get()
 
@@ -997,7 +898,7 @@ def planout ():
  sheet0.write(29,5, "",style4d)                                             # F30
  sheet0.write(29,6, round(ShotArea,2),style4b)                              # G30
 
-# Sheet 1  Nodes and Nodes Lines
+# Sheet 1 ------- Nodes and Nodes Lines ------------------------------------------
 
  sheet1.write(0,0, "Line",style6)
  sheet1.write(0,1, "LineNum",style6)
@@ -1008,7 +909,6 @@ def planout ():
  sheet1.write(0,6, "Line-Hrs",style6)
  sheet1.write(0,7, "Line-Days",style6)
 
-#FOCA1
  nodevel = float(velnode.get())*1.852
  row =1
  for Inode in range(0,len(LineNumber)):
@@ -1049,7 +949,7 @@ def planout ():
  H=s.join(seqH)
  sheet1.write(row, 7, xlwt.Formula(H),style6a)
 
-# Sheet 2   Nodes Polygon
+# Sheet 2 --  Nodes Polygon -----------------------------------------------------------------
  inext = 0
  sheet2.write(0,0, "X",style6)
  sheet2.write(0,1, "Y",style6a)
@@ -1060,9 +960,9 @@ def planout ():
  sheet2.write(inext+1,0, "Area sqKm",style6)
  sheet2.write(inext+1,1, round(NodeArea,2),style6a)
 
-# Sheet 3  Shots and sailline
+# Sheet 3 -- Shots and sailline  ----------------------------------------------------------
 
-## Rereading the sail.txt
+# Rereading the sail.txt
  sailline,sailpoint = [], []
  with open('sail.txt','r') as fsail:
    next(fsail)
@@ -1086,7 +986,7 @@ def planout ():
         lsailp.append(sailpoint[kss])
  lsailp.append(sailpoint[n])
 
-## Rereading the shot.txt
+# Rereading the shot.txt
  sxx,syy = [],[]
  sline,spoint = [], []
  with open('shots.txt','r') as fshot:
@@ -1160,7 +1060,6 @@ def planout ():
  sheet3.write(0,7, "Line-days",style7a)
  sheet3.write(0,8, "Sail-Km",style7a)
 
-
  row = 1
  for Ishot in new_shotline:
      sheet3.write(row,0,row,style4b)
@@ -1178,7 +1077,6 @@ def planout ():
      sheet3.write(srow,8,(new_sailpoint[srow-1]-1)*(shotx.get()/1000.),style4b)
      srow+=1
 
-
  sheet3.write(row,0, "Line",style7)
  sheet3.write(row,1, "LineNum",style7)
  sheet3.write(row,2, "Shots/line ",style7)
@@ -1189,13 +1087,10 @@ def planout ():
  sheet3.write(row,7, "Line-days",style7a)
  sheet3.write(row,8, "Sail-Km",style7a)
 
-
  sheet3.write(row+1,0, "",style7)
  sheet3.write(row+1,1, "",style7)
  sheet3.write(row+1,3, "",style7)
  sheet3.write(row+1,4, "",style7)
-
-
 
  s=""
  value=str(row)
@@ -1220,8 +1115,7 @@ def planout ():
  I=s.join(seqI)
  sheet3.write(row+1, 8, xlwt.Formula(I),style7a)
 
-
-# Sheet 4 Shot Polygon
+# Sheet 4 ------ Shot Polygon ----------------------------------------------------------
 
  sheet4.write(0,0, "X",style7)
  sheet4.write(0,1, "Y",style7a)
@@ -1233,7 +1127,7 @@ def planout ():
  sheet4.write(inext+1,0, "Area sqKm",style7)
  sheet4.write(inext+1,1, round(ShotArea,2),style7a)
 
-# Sheet 5 Fold
+#  ---  Sheet 5 Fold   ---------------------------------------------------------------
 
  sheet5.write(0,0, "Offset",style6)
  sheet5.write(0,1, "Fold",style6a)
@@ -1249,7 +1143,7 @@ def planout ():
  sheet5.write(21,0, " ",style6)
  sheet5.write(21,1, " ",style6a)
 
-# Sheet 6  Grids
+#  ----  Grids  --------------------------------------------------------------------------------
 
  sheet6.write(1,0, "GRID",style6)
  sheet6.write(0,1, "Line_1",style6)
@@ -1379,7 +1273,7 @@ class Poly(object):
       return self.pye
 
 #-----------------------------Class grid--------------------
-#PORRA4
+
 class Grid(object):
 
  import numpy as np
@@ -1453,7 +1347,7 @@ class Grid(object):
 #---------------Polyarea ------------------------------------
 
 class Polyarea(object):
- 
+
  import math
 
  def __init__(self,xp,yp):
@@ -1581,23 +1475,6 @@ class PB:
         self.__root.update()
         self.__root.focus_set()
 
-#-------------------Class Print 
-
-##class MyWriter:
-##
-##    def __init__(self, stdout, filename):
-##        self.stdout = stdout
-##        self.logfile = 'test' #file(filename, 'w')
-##
-##    def write(self, text):
-##        self.stdout.write(text)
-##        self.logfile.write(text)
-
-##    def close(self):
-##        self.stdout.close()
-##        self.logfile.close()
-
-
 #------------------- Call Fold ------------------------------
 def foldm():
  os.system('./fold')
@@ -1607,13 +1484,13 @@ def foldm():
 def planilha():
  os.system('libreoffice Spreadsheet.xls&')
 
-
 #------------------- Call Map PYQGIS----------------------------
 
 def map():
  os.system('./map&')
 
 #------------------Plot-----------------------------------
+
 def plot():
 
  fig, ax = plt.subplots(figsize=(8, 8))
@@ -1651,21 +1528,21 @@ def plot():
 
 #-----------------------------------------------------------------------
 
-Button(root,text="Nodes Computation",font=("Sans Bold", 9), command=rnodes).grid(row=13, column=5)
+Button(root,text="Nodes Computation",font=("Sans Bold", 9), command=rnodes).grid(row=9, column=5,sticky="w")
 
-Button(root,text="Shots/Sails Computation",font=("Sans Bold", 9), command=rshots).grid(row=28, column=5)
+Button(root,text="Full Computation",font=("Sans Bold", 9), command=rshots).grid(row=20, column=5,sticky="w")
 
 #Button(root,text="PLOT ",font=("Sans Bold", 9), command=plot).grid(row=22, column=6)
 
-Button(root,text="PLOT           ",font=("Sans Bold", 9), command=plot).grid(row=26, column=0)
+Button(root,text="PLOT           ",font=("Sans Bold", 9), command=plot).grid(row=15, column=0,sticky="w")
 
-Button(root,text="EXIT",font=("Sans Bold", 9), command=exit).grid(row=40, column=6,sticky=W )
+Button(root,text="EXIT",font=("Sans Bold", 10), command=exit).grid(row=28, column=5,sticky=E )
 
-Button(root,text="MAP PYQGIS     ",font=("Sans Bold", 9), command=map).grid(row=28, column=0)
+Button(root,text="MAP PYQGIS ",font=("Sans Bold", 9), command=map).grid(row=19, column=0, sticky="w")
 
-Button(root,text="Spread Sheet   ",font=("Sans Bold", 9), command=planilha).grid(row=30, column=0)
+Button(root,text="SpreadSheet",font=("Sans Bold", 9), command=planilha).grid(row=21, column=0,sticky="w")
 
-Button(root,text="FOLD   ",font=("Sans Bold", 9), command=foldm).grid(row=32, column=0)
+Button(root,text="FOLD           ",font=("Sans Bold", 9), command=foldm).grid(row=23, column=0,sticky="w")
 
 root.mainloop()
 
