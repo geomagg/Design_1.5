@@ -629,7 +629,7 @@ def planout ():
  sheet3 = book.add_sheet("Shots")
  sheet4 = book.add_sheet("Shots_polygon")
  sheet5 = book.add_sheet("Fold x Offset")
- sheet6 = book.add_sheet("Grids")
+ sheet7 = book.add_sheet("SailLines")
 
 # Defining styles
  style= xlwt.easyxf(' font: name Arial, bold on; borders: left thick,  right thick,top thick, bottom thick;  pattern: pattern solid, fore_colour gray25 ;')
@@ -650,6 +650,10 @@ def planout ():
  style7= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium;  pattern: pattern solid, fore_colour light-blue ')
  style7a= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium, right medium;  pattern: pattern solid, fore_colour light-blue ')
  style7b= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium, left medium;  pattern: pattern solid, fore_colour light-blue ')
+ style9= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium;  pattern: pattern solid, fore_colour green ')
+ style9a= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium, right medium;  pattern: pattern solid, fore_colour green ')
+ style9b= xlwt.easyxf('font: colour white, name Arial, bold on, height 200; borders: bottom medium, top medium, left medium;  pattern: pattern solid, fore_colour green ')
+
  style8= xlwt.easyxf(' font: bold off , height 140;')
 
 # sheet0.insert_bitmap('geomagg3.png',0,0)
@@ -924,32 +928,7 @@ def planout ():
  sheet2.write(inext+1,0, "Area sqKm",style6)
  sheet2.write(inext+1,1, round(NodeArea,2),style6a)
 
-# Sheet 3 -- Shots and sailline  ----------------------------------------------------------
-
-# Rereading the sail.txt
- sailline,sailpoint = [], []
- with open('sail.txt','r') as fsail:
-   next(fsail)
-   reader = csv.reader(fsail, delimiter=' ')
-   for row in reader:
-     sailline.append(float(row[2]))
-     sailpoint.append(float(row[3]))
- fsail.close()
-
-# Find the line in hte vector and summ how many it happens(this is the numeber of sailpoints  in each line)
- new_sailline = []
- new_sailpoint = []
- for ksl in sailline:
-     if ksl not in new_sailline:
-        new_sailline.append(ksl)
-        new_sailpoint.append(sailline.count(ksl))
- fsailp,lsailp = [],[]
- n=len(sailpoint)-1
- for kss in range(0,n):
-    if (sailpoint[kss+1]-sailpoint[kss])<0: 
-        lsailp.append(sailpoint[kss])
- lsailp.append(sailpoint[n])
-
+# Sheet 3 -- Shot Lines   --------------------------------------
 # Rereading the shot.txt
  sxx,syy = [],[]
  sline,spoint = [], []
@@ -978,16 +957,6 @@ def planout ():
  lsp.append(spoint[nn])
 
 # Compute Sheet 0 values
- new_saillinekm = []
- new_saillinedays = []
- new_saillinehours = [] 
- for ip in range(0,len(new_sailpoint)):
-      kmsail = (new_sailpoint[ip]-1)*(shotx.get()/1000.)
-      new_saillinekm.append(kmsail)
-      tsailhours = kmsail/(velshot.get()*1.852)
-      tsaildays = tsailhours/24
-      new_saillinedays.append(tsaildays)
-      new_saillinehours.append(tsailhours)
 
  new_shotlinekm = []
  new_shotlinedays = []
@@ -1008,76 +977,46 @@ def planout ():
  sheet0.write(20,6, round(sum(new_shotlinehours),2),style4b)                   # G21
  sheet0.write(21,6, round(sum(new_shotlinedays),2),style4b)                    # G22
  sheet0.write(22,6, round(sum(new_numbershots)/ShotArea,2),style4b)            # G23
- sheet0.write(23,6, len(new_sailline),style4b)                                 # G24
- sheet0.write(25,6, sum(new_saillinekm),style4b)                               # G25
- sheet0.write(24,6, round(sum(new_saillinekm)/len(new_sailline),2),style4b)    # G26
  sheet0.write(26,6, min(new_numbershots),style4b)                              # G27
  sheet0.write(27,6, max(new_numbershots),style4b)                              # G28
 
  sheet3.write(0,0, "Line",style7)
- sheet3.write(0,1, "LineNum",style7)
- sheet3.write(0,2, "Shots/line ",style7)
- sheet3.write(0,3, "First Shot ",style7)
- sheet3.write(0,4, "Last Shot",style7)
- sheet3.write(0,5, "Line-Km",style7)
- sheet3.write(0,6, "Line-hours",style7a)
- sheet3.write(0,7, "Line-days",style7a)
- sheet3.write(0,8, "Sail-Km",style7a)
+ sheet3.write(0,1, "Sail Line",style7)
+ sheet3.write(0,2, "Shots / line ",style7)
+ sheet3.write(0,3, "Line-Km",style7a)
+# sheet3.write(0,4, "Line-hours",style7a)
+# sheet3.write(0,5, "Line-days",style7a)
 
  row = 1
  for Ishot in new_shotline:
      sheet3.write(row,0,row,style4b)
      sheet3.write(row,1,new_shotline[row-1],style4b)
      sheet3.write(row,2,new_numbershots[row-1],style4b)
-     sheet3.write(row,3,lsp[row-1]-new_numbershots[row-1]+1,style4b)
-     sheet3.write(row,4,lsp[row-1],style4b)
-     sheet3.write(row,5,(new_numbershots[row-1]-1)*(shotx.get()/1000.),style4b)
-     sheet3.write(row,6,round(((new_numbershots[row-1]-1)*(shotx.get()/1000.))/(velshot.get()*1.852),2),style4b)
-     sheet3.write(row,7,round((((new_numbershots[row-1]-1)*(shotx.get()/1000.))/(velshot.get()*1.852))/24,3),style4b)
+     sheet3.write(row,3,(new_numbershots[row-1]-1)*(shotx.get()/1000.),style4b)
      row+=1
-
- srow = 1
- for Isail in new_sailline:
-     sheet3.write(srow,8,(new_sailpoint[srow-1]-1)*(shotx.get()/1000.),style4b)
-     srow+=1
 
  sheet3.write(row,0, "Line",style7)
  sheet3.write(row,1, "LineNum",style7)
  sheet3.write(row,2, "Shots/line ",style7)
- sheet3.write(row,3, "First Shot ",style7)
- sheet3.write(row,4, "Last Shot",style7)
- sheet3.write(row,5, "Line-Km",style7)
- sheet3.write(row,6, "Line-hours",style7a)
- sheet3.write(row,7, "Line-days",style7a)
- sheet3.write(row,8, "Sail-Km",style7a)
+ sheet3.write(row,3, "Line-Km",style7)
 
- sheet3.write(row+1,0, "",style7)
+# sheet3.write(row+1,0, "",style7)
  sheet3.write(row+1,1, "",style7)
- sheet3.write(row+1,3, "",style7)
- sheet3.write(row+1,4, "",style7)
 
  s=""
  value=str(row)
+
+ seqA=["COUNT(A2:A",value,")"]
+ A=s.join(seqA)
+ sheet3.write(row+1, 0, xlwt.Formula(A),style7)
  
  seqC=["SUM(C2:C",value,")"]
  C=s.join(seqC)
  sheet3.write(row+1, 2, xlwt.Formula(C),style7)
 
- seqF=["SUM(F2:F",value,")"]
- F=s.join(seqF)
- sheet3.write(row+1, 5, xlwt.Formula(F),style7)
-
- seqG=["SUM(G2:G",value,")"]
- G=s.join(seqG)
- sheet3.write(row+1, 6, xlwt.Formula(G),style7a)
-
- seqH=["SUM(H2:H",value,")"]
- H=s.join(seqH)
- sheet3.write(row+1, 7, xlwt.Formula(H),style7a)
-
- seqI=["SUM(I2:I",value,")"]
- I=s.join(seqI)
- sheet3.write(row+1, 8, xlwt.Formula(I),style7a)
+ seqD=["SUM(D2:D",value,")"]
+ D=s.join(seqD)
+ sheet3.write(row+1, 3, xlwt.Formula(D),style7)
 
 # Sheet 4 ------ Shot Polygon ----------------------------------------------------------
 
@@ -1107,13 +1046,90 @@ def planout ():
  sheet5.write(21,0, " ",style6)
  sheet5.write(21,1, " ",style6a)
 
-#  ----  Grids  --------------------------------------------------------------------------------
+#  ----  Sheet 7 Sail Lines  --------------------------------------------------------------------------------
+# Rereading the sail.txt
+ sailline,sailpoint = [], []
+ with open('sail.txt','r') as fsail:
+   next(fsail)
+   reader = csv.reader(fsail, delimiter=' ')
+   for row in reader:
+     sailline.append(float(row[2]))
+     sailpoint.append(float(row[3]))
+ fsail.close()
+# Find the line in hte vector and summ how many it happens(this is the numeber >
+ new_sailline = []
+ new_sailpoint = []
+ for ksl in sailline:
+     if ksl not in new_sailline:
+        new_sailline.append(ksl)
+        new_sailpoint.append(sailline.count(ksl))
+ fsailp,lsailp = [],[]
+ n=len(sailpoint)-1
+ for kss in range(0,n):
+    if (sailpoint[kss+1]-sailpoint[kss])<0: 
+        lsailp.append(sailpoint[kss])
+ lsailp.append(sailpoint[n])
 
- sheet6.write(1,0, "GRID",style6)
- sheet6.write(0,1, "Line_1",style6)
- sheet6.write(0,2, "Line_N",style6a)
- sheet6.write(0,3, "Point_1",style6)
- sheet6.write(0,4, "Point_N",style6a)
+# Compute Sheet 0 values
+ new_saillinekm = []
+ new_saillinedays = []
+ new_saillinehours = [] 
+ for ip in range(0,len(new_sailpoint)):
+      kmsail = (new_sailpoint[ip]-1)*(shotx.get()/1000.)
+      new_saillinekm.append(kmsail)
+      tsailhours = kmsail/(velshot.get()*1.852)
+      tsaildays = tsailhours/24
+      new_saillinedays.append(tsaildays)
+      new_saillinehours.append(tsailhours)
+
+# Now writing 
+ sheet0.write(23,6, len(new_sailline),style4b)                                 # G24
+ sheet0.write(25,6, sum(new_saillinekm),style4b)                               # G25
+ sheet0.write(24,6, round(sum(new_saillinekm)/len(new_sailline),2),style4b)    # G26
+
+
+ sheet7.write(0,0, "Line",style9)
+ sheet7.write(0,1, "Sail Line",style9)
+ sheet7.write(0,2, "Line-Km",style9)
+ sheet7.write(0,3, "Line-hours",style9a)
+ sheet7.write(0,4, "Line-days",style9a)
+
+
+ srow = 1
+ for Isail in new_sailline:
+     sheet7.write(srow,0,srow,style4b)
+     sheet7.write(srow,1,new_sailline[srow-1],style4b)
+     sheet7.write(srow,2,(new_sailpoint[srow-1]-1)*(shotx.get()/1000.),style4b)
+     sheet7.write(srow,3,round(((new_sailpoint[srow-1]-1)*(shotx.get()/1000.))/(velshot.get()*1.852),2),style4b)
+     sheet7.write(srow,4,(new_sailpoint[srow-1]-1)*(shotx.get()/1000.),style4b)
+     srow+=1
+
+
+ sheet7.write(srow,0, "Line",style9)
+ sheet7.write(srow,1, "LineNum",style9)
+ sheet7.write(srow,2, "Line-Km",style9)
+ sheet7.write(srow,3, "Line-hours",style9)
+ sheet7.write(srow,4, "Line-days",style9a)
+
+ sheet7.write(srow+1,0, "",style9)
+ sheet7.write(srow+1,1, "",style9)
+
+ s=""
+ value=str(srow)
+ seqC=["SUM(C2:C",value,")"]
+ C=s.join(seqC)
+ sheet7.write(srow+1, 2, xlwt.Formula(C),style9a)
+
+ seqD=["SUM(D2:D",value,")"]
+ D=s.join(seqD)
+ sheet7.write(srow+1, 3, xlwt.Formula(D),style9a)
+
+ seqE=["SUM(E2:D",value,")"]
+ E=s.join(seqE)
+ sheet7.write(srow+1, 4, xlwt.Formula(E),style9a)
+
+
+#---------------------------------------------------------------
 
  book.save("Spreadsheet.xls")
 
