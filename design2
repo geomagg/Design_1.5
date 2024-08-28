@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,9 +17,14 @@ import xlwt
 from PIL import Image
 import datetime
 
+from poly import Poly
+from source import Source
+from grid import Grid
+from polyarea import Polyarea
+from polyexp import Polyexp
+
 root = Tk()
 root.title('OBN SURVEY DESIGN')
-
 #def NewFile():
 #    name  = asksaveasfilename()
 #    print (name)
@@ -276,8 +280,7 @@ var2c = IntVar()
 Checkbutton(root, text=' Plot grid origin  ',font=("Sans Bold", 9), variable=var2c ).grid(row =8, column=0, sticky=W)
 var2c.set("0")
 #########
-#------------------Reading  Node polygon---------------------------------------------------------------------
-
+#------------------Reading  Node polygon--------------
 def rnodes():
  global xp,yp
  X=[]
@@ -308,7 +311,6 @@ def rnodes():
  print ('     ')
  
 #------------------Node Grid Generation -----------------------------
-
  global x0,y0
  global XX,YY
  global NumberofNodes
@@ -331,9 +333,7 @@ def rnodes():
  stagger=0
  if v.get() == 1:
   stagger=1
- f1 = open('SPSnodes.txt', 'w')
  f = open('nodes.txt', 'w') 
- fspsr = open("SPS.r", 'w')
 
  XX,YY=[],[]
 
@@ -382,7 +382,6 @@ def rnodes():
       YY.append(float(y[k][l]))
       aax=x[k][l]
       aay=y[k][l]
-# FOCA
       if flagnode==0:
          LineNumber.append(k)
          FNL.append(l)
@@ -571,16 +570,8 @@ def rshots():
      interv=2
      adv=0
 
-#  Initalizing the shot statistic counter 
- NumberofShotPoints = 0
- NumberofSailPoints = 0
- NumberofShotLines = 0
- NumberofSailLines  = 0
- NumberofShotPointsPerLine = 0
- NumberofSailPointsPerLine = 0
  sailint = 1
  sailflag= 0
- ##OutsidePoints = 'false'
 
  for jj in range(0,ny-1,interv):
     a.update(upt)
@@ -593,18 +584,13 @@ def rshots():
         sht.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj][ii]),(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
         sht.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj+adv][ii+adv]),(GRIDYY[jj+adv][ii+adv]),GRIDLN[jj+adv][ii+adv],GRIDPT[jj+adv][ii+adv]))
         sail.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj+1][ii+1]),(GRIDYY[jj+1][ii+1]),GRIDLN[jj+1][ii+1],GRIDPT[jj+1][ii+1]))
-        NumberofShotPoints = NumberofShotPoints + 2
-        NumberofSailPoints = NumberofSailPoints + 2
       if nsources ==1:
         sht.write("%7.2f %7.2f %2i %2i\n" % (float(GRIDXX[jj][ii]),float(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
         sail.write("%7.2f %7.2f %2i %2i\n" % (float(GRIDXX[jj][ii]),float(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
-        NumberofShotPoints = NumberofShotPoints + 1
-        NumberofSailPoints = NumberofSailPoints + 1
       if nsources ==3: 
         sht.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj][ii]),(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
         sht.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj+adv][ii+adv]),(GRIDYY[jj+adv][ii+adv]),GRIDLN[jj+adv][ii+adv],GRIDPT[jj+adv][ii+adv]))
         sht.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj+adv+1][ii+adv+1]),(GRIDYY[jj+adv+1][ii+adv+1]),GRIDLN[jj+adv+1][ii+adv+1],GRIDPT[jj+adv+1][ii+adv+1]))
-        NumberofShotPoints = NumberofShotPoints + 3
 
 # -------- Loop for sailines 
 
@@ -614,33 +600,11 @@ def rshots():
         if DentroPoints or OutsidePoints:
           inc = sailint%2
           sail.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj+sailint][ii+inc]),(GRIDYY[jj+sailint][ii+inc]),GRIDLN[jj+sailint][ii+inc],GRIDPT[jj+sailint][ii+inc]))
-          NumberofSailPoints = NumberofSailPoints + 2
           sailflag = 1
     if sailflag == 1 :
       sailint=sailint+1
-
-#-------------------
-
-    NumberofSailLines = NumberofSailLines + 1
-    NumberofShotLines = NumberofShotLines + nsources 
-    NumberofShotPointsPerLine = NumberofShotPointsPerLine + 1
-    NumberofSailPointsPerLine = NumberofSailPointsPerLine + nsources
     upt=upt+progress
-
  a.close()
-
-
- print ('     ')
- print ('Shot Grid  -------------------------------')
- print ('Shot Point Interval (m) =' ,nsources*dxa)
- print ('Pop Interval (m) =' ,dxa)
- print ('Crossline Shot Interval (m) =' ,nsources*dya)
- print ('Lateral distance of arrays (m) =' ,dya)
- print ('Sail Line Interval (m) =' ,dya*nsources)
- print ('Shot Point Interval (m) =' ,dxa) 
- print ('Bin x (m) =' , dxa*nsources/2 )
- print ('Bin y (m) =' , dya*nsources/2 )
-
 
  upt=upt+progress
  a.close()
@@ -1151,295 +1115,7 @@ def planout ():
  sheet6.write(0,3, "Point_1",style6)
  sheet6.write(0,4, "Point_N",style6a)
 
-
  book.save("Spreadsheet.xls")
-
-
-#-------------------------CLASSES---------------------------------------
-#--------------Class Source
-
-class Source(object):
-
- def __init__(self,x,y,dx,ang,ort):
-  import math
-  import numpy as np
-
-  self.ort=ort
-  self.x=x
-  self.y=y
-  self.ang=ang
-  self.dx=dx
-  
-  ang1 = self.ang*np.pi/180.
-
-  if self.ort==0:
-    self.deltax1=(dx/2)*-math.sin(ang1)
-    self.deltay1=(dx/2)*math.cos(ang1)
-    self.deltax2=(dx/2)*-math.sin(ang1)*-1
-    self.deltay2=(dx/2)*math.cos(ang1)*-1
-
-  else:
-    self.deltay1=(dx/2)*math.sin(ang1)
-    self.deltax1=(dx/2)*math.cos(ang1)
-    self.deltay2=(dx/2)*math.sin(ang1)*-1
-    self.deltax2=(dx/2)*math.cos(ang1)*-1
-
-  self.sourcex=np.zeros(len(self.x))
-  self.sourcey=np.zeros(len(self.y)) 
-  k=0
-  for i in range(0,len(self.x)):
-     if (i%2) == 0:
-      self.sourcex[k]=float(self.x[i])+self.deltax1
-      self.sourcey[k]=float(self.y[i])+self.deltay1
-     if (i%2) == 1 :
-      self.sourcex[k]=float(self.x[i])+self.deltax2
-      self.sourcey[k]=float(self.y[i])+self.deltay2
-     k+=1
-     
- def getsourcex(self):
-      return self.sourcex
- def getsourcey(self):
-      return self.sourcey
-
-#---------------------Class Poly----------------------------------------
-class Poly(object):
-
- def __init__(self,px,py,halo):
-
-  import numpy as np
-  import math  as m
-  import matplotlib.pyplot as plt
-  import csv
-  from shapely.geometry import Point, Polygon
-  from shapely.geometry.polygon import LinearRing, Polygon
-  from shapely.geometry import MultiPoint
-
-  self.px=px
-  self.py=py
-  self.halo=halo
-  phi = np.zeros(len(self.px))
-  p1x = np.zeros(len(self.px))
-  p1y = np.zeros(len(self.px))
-  p2x = np.zeros(len(self.px))
-  p2y = np.zeros(len(self.px))
-  self.pxe = np.zeros(len(self.px))
-  self.pye = np.zeros(len(self.px))
-  n=len(self.px)
-
-  for i in range(1,n-1):
-    phi[i]=m.atan2(float(self.py[i+1])-float(self.py[i]),float(self.px[i+1])-float(self.px[i]))
-  phi[n-1]=m.atan2(float(self.py[1])-float(self.py[n-1]),float(self.px[1])-float(self.px[n-1]))
-  phi[0]=phi[n-1]
-
-  for i in range(1,n):
-      p1x[i]=float(self.px[i])-m.sin(phi[i-1])*halo
-      p1y[i]=float(self.py[i])+m.cos(phi[i-1])*halo
-  p1x[0]=p1x[n-1]
-  p1y[0]=p1y[n-1]
-
-  for i in range(1,n-1):
-    p2x[i]=(-p1x[i]*m.tan(phi[i-1])+p1x[i+1]*m.tan(phi[i])+p1y[i]-p1y[i+1])
-    p2x[i]=p2x[i]/(m.tan(phi[i])-m.tan(phi[i-1]))
-    p2y[i]=(-p1x[i]*m.tan(phi[i-1])*m.tan(phi[i])+
-              p1x[i+1]*m.tan(phi[i-1])*m.tan(phi[i])
-             -p1y[i+1]*m.tan(phi[i-1])+p1y[i]*m.tan(phi[i]))
-    p2y[i]= p2y[i]/(m.tan(phi[i])-m.tan(phi[i-1]))
-    
-    self.pxe[i]=p2x[i]
-    self.pye[i]=p2y[i]
-
-
-  p2x[n-1]=(-p1x[n-1]*m.tan(phi[n-2])
-             +p1x[1]*m.tan(phi[n-1])
-             +p1y[n-1]-p1y[1])
-  p2x[n-1]=p2x[n-1]/(m.tan(phi[n-1])-m.tan(phi[n-2]))
-  p2y[n-1]=(-p1x[n-1]*m.tan(phi[n-2])*m.tan(phi[n-1])
-            +p1x[1]*m.tan(phi[n-2])*m.tan(phi[n-1])
-            -p1y[1]*m.tan(phi[n-2])+p1y[n-1]*m.tan(phi[n-1]))
-  p2y[n-1]=p2y[n-1]/(m.tan(phi[n-1])-m.tan(phi[n-2]))
-
-  self.pxe[n-1]=p2x[n-1]
-  self.pye[n-1]=p2y[n-1]
-
-  p2x[0]=p2x[n-1]
-  self.pxe[0]=p2x[0]
-  p2y[0]=p2y[n-1]
-  self.pye[0]=p2y[0]
-
-
- def getpxe(self):
-      return self.pxe
- def getpye(self):
-      return self.pye
-
-#-----------------------------Class grid--------------------
-
-class Grid(object):
-
- import numpy as np
- import math
-
- def __init__(self,x0,y0,dx,dy,nx,ny,angle,angle1,stagger,ort):
-
-  import numpy as np
-  import math
-  import matplotlib.pyplot as plt
-
-  self.ort=ort
-  self.x0=x0
-  self.y0=y0
-  self.dx=dx
-  self.dy=dy
-  self.nx=nx
-  self.ny=ny
-  self.angle=angle
-  self.angle1=angle1
-  self.stag=stagger
-  ang = self.angle*np.pi/180.
-  ang1 = self.angle1*np.pi/180.
-
-  if self.ort==1:
-    ydx=self.dy*math.cos(ang);
-    ydy=self.dy*math.sin(ang);
-    xdx=self.dx*-math.sin(ang1);
-    xdy=self.dx*math.cos(ang1);
-  else:
-    xdx=self.dx*math.cos(ang);
-    xdy=self.dx*math.sin(ang);
-    ydx=self.dy*-math.sin(ang1);
-    ydy=self.dy*math.cos(ang1);
-
-  self.gridx=[]
-  self.gridy=[]
-
-  for j in range(0,self.ny):
-   self.gridx.append([])
-   self.gridy.append([])
-   for i in range (0,self.nx): 
-      if j%2 == 0:
-       extrax=self.stag*(xdx/2)
-       extray=self.stag*(xdy/2)
-      else:
-       extrax=0
-       extray=0
-      xx=self.x0+(i)*xdx +extrax
-      yy=self.y0+(i)*xdy +extray
-      self.gridx[j].append(xx)
-      self.gridy[j].append(yy)
-   self.x0+=ydx
-   self.y0+=ydy
-
-  self.xx = np.array(self.gridx)
-  self.yy = np.array(self.gridy)
-
-  self.nnx = np.size(self.xx,1)
-  self.nny = np.size(self.yy,0)
-
- def getarrx(self):
-      return self.xx
- def getarry(self):
-      return self.yy
- def getnnx(self):
-      return self.nnx
- def getnny(self):
-      return self.nny
-
-#---------------Polyarea ------------------------------------
-
-class Polyarea(object):
-
- import math
-
- def __init__(self,xp,yp):
-
-  self.xp=xp
-  self.yp=yp
-  dd=0
-  ss=0
-  for j in range(0,len(self.xp)-1):
-     dd+=float(self.xp[j])*float(self.yp[j+1])
-     ss+=float(self.xp[j+1])*float(self.yp[j])
-
-  self.A=-(dd-ss)/2000000;
-
-  if self.A > 0 :
-   self.order = 'true'
-
- def getarea(self):
-     return self.A
- def getorder(self):
-      return self.order
-
-#---------------Cio Polyexp rounding-------------------------------------
-
-class Polyexp(object):
-
- def __init__(self,px,py,halo):
-
-  import numpy as np
-  import math  as math
-
-  self.X=px
-  self.Y=py
-  self.halo=halo
-  phi = np.zeros(len(self.X))
-  phi1 = np.zeros(len(self.X))
-  A1 = np.zeros(len(self.X))
-  pex,pey=[],[]
-
-  self.N=len(self.X)
-
-  phi[0] =math.atan2(self.Y[1]-self.Y[0],self.X[1]-self.X[0])
-  phi1[0]=math.atan2(self.Y[self.N-2]-self.Y[0],self.X[self.N-2]-self.X[0])
-
-  for  ij in range(1,self.N-1):
-       phi1[ij]=math.atan2(self.Y[ij-1]-self.Y[ij],self.X[ij-1]-self.X[ij])
-       phi[ij]=math.atan2(self.Y[ij+1]-self.Y[ij],self.X[ij+1]-self.X[ij])
-
-# Find the concave vertices please
-  halo1 =self.halo
-  halo2 =self.halo
-
-#  print 'N',self.N
-  for i in range(0,self.N-1):
-     concv=(self.X[i]-self.X[i-1])*(self.Y[i+1]-self.Y[i])-(self.X[i+1]-self.X[i])*(self.Y[i]-self.Y[i-1])
-     if concv>0 :
-      pex.append(self.X[i])
-      pey.append(self.Y[i])
-     else:
-# Compute the distance to next and previous vertices
-      if i==0:
-         A1[i]=math.sqrt((self.Y[self.N-2]-self.Y[i])**2+(self.X[self.N-2]-self.X[i])**2)
-      else:
-         A1[i]=math.sqrt((self.Y[i-1]-self.Y[i])**2+(self.X[i-1]-self.X[i])**2)
-         A1[i]=math.sqrt((self.Y[i+1]-self.Y[i])**2+(self.X[i+1]-self.X[i])**2)
-      if A1[i]<self.halo:
-         halo1=A1[i]
-      if A1[i]<self.halo:
-         halo2=A1[i]
-
-#      Compute the new vertices  and Bezier
-
-      pex.append(math.cos(phi1[i])*halo1/(math.tan ((phi[i]-phi1[i])/2))+self.X[i])
-      pey.append(math.sin(phi1[i])*halo1/(math.tan ((phi[i]-phi1[i])/2))+self.Y[i])
-      pex.append(math.cos(phi[i])*halo2/(math.tan ((phi[i]-phi1[i])/2))+self.X[i])
-      pey.append(math.sin(phi[i])*halo2/(math.tan ((phi[i]-phi1[i])/2))+self.Y[i])
-      halo1=self.halo
-      halo2=self.halo
-
-  pex.append(pex[0])
-  pey.append(pey[0])
-  self.ixn=len(pex)
-
-  self.pp=pex
-  self.qq=pey
-
- def getixn(self):
-     return self.ixn
- def getpex(self):
-     return self.pp
- def getpey(self):
-     return self.qq
 
 #-----------------Class  bar (Progress bar)--------------------
 class PB:
@@ -1475,22 +1151,19 @@ class PB:
         self.__root.update()
         self.__root.focus_set()
 
+
+
+
 #------------------- Call Fold ------------------------------
 def foldm():
  os.system('./fold')
-
 #------------------- Call Planilha----------------------------
-
 def planilha():
  os.system('libreoffice Spreadsheet.xls&')
-
 #------------------- Call Map PYQGIS----------------------------
-
 def map():
  os.system('./map&')
-
 #------------------Plot-----------------------------------
-
 def plot():
 
  fig, ax = plt.subplots(figsize=(8, 8))
