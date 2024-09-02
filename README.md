@@ -18,7 +18,11 @@ The shot polygon can be given but can also be computed by expanding the node pol
 Modelo PETROBRAS  
 OPTION1 ESPG:NA  
 0-degrees-SingleSource 12  
-1 2  
+1 2   ------>   and  Number  of sources
+4.6 .5     ---> speed source vessel in knots  and turn in hours
+1. 3       ---->  ROV speed in knots and lines deployde before shooting
+10 1000   ----> Record length (s) and approximate water depth im meters
+
 
 ### 2- pol2.txt    
 x y  
@@ -35,8 +39,6 @@ x y
 316000 516000  
 316000 492000  
 292000 492000  
-
-
 
 
 
