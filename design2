@@ -608,7 +608,7 @@ def rshots():
         sail.write("%7.2f %7.2f %2i %2i\n" % (float(GRIDXX[jj][ii]),float(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
       if nsources ==3: 
         sht.write("%7.2f %7.2f %2.1f %2.1f\n" % ((GRIDXX[jj][ii]),(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
-        sht.write("%7.2f %7.2f %2.1f %2.1f\n" % ((GRIDXX[jj+adv][ii+adv]),(GRIDYY[jj+adv][ii+adv]),GRIDLN[jj+adv][ii+adv],GRIDPT[jj+adv][ii+adv]))
+#        sht.write("%7.2f %7.2f %2.1f %2.1f\n" % ((GRIDXX[jj+adv][ii+adv]),(GRIDYY[jj+adv][ii+adv]),GRIDLN[jj+adv][ii+adv],GRIDPT[jj+adv][ii+adv]))
         sht.write("%7.2f %7.2f %2.1f %2.1f\n" % ((GRIDXX[jj+adv+1][ii+adv+1]),(GRIDYY[jj+adv+1][ii+adv+1]),GRIDLN[jj+adv+1][ii+adv+1],GRIDPT[jj+adv+1][ii+adv+1]))
 
 # -------- Loop for sailines 
@@ -841,11 +841,13 @@ def planout ():
 
  sheet0.write(13,4, "Shot Point Int (m):",style4f)                          # E14
  sheet0.write(13,5, "",style4f)                                             # F14
- sheet0.write(13,6, float(shotx.get()),style4b)                             # G14
+ sheet0.write(13,6, float(shotx.get())*nfontes.get(),style4b)
+# PORRA MOD2
+                             # G14
 
  sheet0.write(14,4, "Bin X (m):",style4f)                                   # E15
  sheet0.write(14,5, "",style4f)                                             # F15
- sheet0.write(14,6, float(shotx.get()/2),style4b)                           # G15
+ sheet0.write(14,6, float(nfontes.get()*shotx.get()/2),style4b)                           # G15
 
  sheet0.write(15,4, "Bin Y (m):",style4f)                                   # E16
  sheet0.write(15,5, "",style4f)                                             # E16
@@ -985,6 +987,7 @@ def planout ():
      if isl not in new_shotline:
         new_shotline.append(isl)
         new_numbershots.append(sline.count(isl))
+        print ("PORRA Number of shots/line", sline.count(isl),isl)
  fsp,lsp = [],[]
  nn=len(spoint)-1
  for iss in range(0,nn):
@@ -1026,7 +1029,8 @@ def planout ():
      sheet3.write(row,0,row,style4b)
      sheet3.write(row,1,new_shotline[row-1],style4b)
      sheet3.write(row,2,new_numbershots[row-1],style4b)
-     sheet3.write(row,3,(new_numbershots[row-1]-1)*(shotx.get()/1000.),style4b)
+#  PORRA MOD1
+     sheet3.write(row,3,(new_numbershots[row-1]-1)*(nfontes.get()*shotx.get()/1000.),style4b)
      row+=1
 
  sheet3.write(row,0, "Line",style7)
