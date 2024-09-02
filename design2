@@ -22,25 +22,37 @@ from source import Source
 from grid import Grid
 from polyarea import Polyarea
 from polyexp import Polyexp
+from tkinter import messagebox 
+from tkinter import ttk
+from tkinter.messagebox import showerror, showwarning, showinfo
+
+
+fp = open("polipar1", 'r')
+par1,par2=[],[]
+reader = csv.reader(fp, delimiter=' ')
+for row in reader:
+    par1.append(row[0])
+    par2.append(row[1])
+fp.close()
+
 
 root = Tk()
 root.title('OBN SURVEY DESIGN')
-#def NewFile():
-#    name  = asksaveasfilename()
-#    print (name)
-#def OpenFile():
-#    filename = askopenfilename()
-#    fp = open(filename)
+
+def OpenFile():
+   filename = askopenfilename()
+
 def About():
     print ("Version 1.50 = Marcos Guimaraes")
+
 menu = Menu(root)
 root.config(menu=menu)
-#filemenu = Menu(menu)
-#menu.add_cascade(label="File",font=("Sans Bold", 10), menu=filemenu)
-#filemenu.add_command(label="Spreadsheet file", command=NewFile)
-#filemenu.add_command(label="Node polygon file", command=OpenFile)
-#filemenu.add_command(label="Shot polygon file", command=OpenFile)
-#filemenu.add_command(label="EXIT", command=root.quit)
+filemenu = Menu(menu)
+menu.add_cascade(label="File",font=("Sans Bold", 10), menu=filemenu)
+filemenu.add_command(label="Spreadsheet file", command=OpenFile)
+filemenu.add_command(label="Node polygon file", command=OpenFile)
+filemenu.add_command(label="Survey Parameters", command=OpenFile)
+filemenu.add_command(label="EXIT", command=exit)
 helpmenu = Menu(menu)
 menu.add_cascade(label="Help",font=("Sans Bold", 8), menu=helpmenu)
 helpmenu.add_command(label="About", command=About)
@@ -54,13 +66,6 @@ photo_label.grid()
 Label(root, text='Design 1.51  ',font=("Sans Bold", 8)).grid(row=0,column=5,sticky=NE)
 Frame(root, bg="black",width=400, height=400)
 
-fp = open("polipar1", 'r')
-par1,par2=[],[]
-reader = csv.reader(fp, delimiter=' ')
-for row in reader:
-    par1.append(row[0])
-    par2.append(row[1])
-fp.close()
 
 #------------ BLOCO  1 ------------------------------------------------------------------------
 #######
@@ -71,6 +76,7 @@ Label(root, text="Nodes space X (m):",font=("Sans Bold", 8)).grid(row=3, column=
 nodex = DoubleVar()
 Entry(root, width=10, textvariable=nodex,font=("Sans Bold", 8)).grid(row=3, column=3,sticky='w')
 nodex.set(par1[0])
+
 Label(root, text="       Nodes space Y (m):",font=("Sans Bold", 8)).grid(row=3, column=4,sticky='w')
 nodey = DoubleVar()  
 Entry(root, width=10, textvariable=nodey,font=("Sans Bold", 8)).grid(row=3, column=5,sticky='w')
@@ -108,7 +114,7 @@ def ShowChoice():
     print(v.get())
 for val, language in enumerate(languages):
        Radiobutton(root,text=language,padx = 2,variable=v,command=ShowChoice,
-       value=val,font=("Sans Bold", 8),fg ='blue').grid(row =7+val, column=2,sticky=W)
+       value=val,font=("Sans Bold", 7),fg ='blue').grid(row =7+val, column=2,sticky=W)
 ########
 #--------------------------------------------------------------
 ########
@@ -173,7 +179,7 @@ def ShowChoice():
     print(nfontes.get())
 for val, lname in enumerate(lname):
   Radiobutton(root,text=lname, variable=nfontes,
-      command=ShowChoice,value=val+1,font=("Sans Bold", 8),fg = 'blue').grid(row =18+val, 
+      command=ShowChoice,value=val+1,font=("Sans Bold", 7),fg = 'blue').grid(row =17+val, 
       column=2, sticky=W)
 #########
 #------------------------------------------------------------------
@@ -214,7 +220,7 @@ Label(root, text="Survey Parameters  ",font=("Sans Bold", 11)).grid(row=21, colu
 Label(root, text="Source speed (kts): ",font=("Sans Bold", 8)).grid(row=22, column=2,sticky='w')
 velshot = DoubleVar()
 Entry(root, width=8, textvariable=velshot,font=("Sans Bold", 8)).grid(row=22, column=3,sticky='w')
-velshot.set("4.6")
+velshot.set(par1[12])
 Label(root, text="   ROV speed (kts): ",font=("Sans Bold", 8)).grid(row=22, column=4,sticky='w')
 velnode = DoubleVar()
 Entry(root, width=8, textvariable=velnode,font=("Sans Bold", 8)).grid(row=22, column=5,sticky='w')
@@ -223,11 +229,11 @@ velnode.set("1.")
 Label(root, text="Line chg (Hours) : ",font=("Sans Bold", 8)).grid(row=23, column=2,sticky='w')
 chglinetime = DoubleVar()
 Entry(root, width=8, textvariable=chglinetime,font=("Sans Bold", 8)).grid(row=23, column=3,sticky='w')
-chglinetime.set(".5")
+chglinetime.set(par2[12])
 Label(root, text="   Maxoffset (m): ",font=("Sans Bold", 8)).grid(row=23, column=4,sticky='w')
 MaxOff = DoubleVar()
 Entry(root, width=8, textvariable=MaxOff,font=("Sans Bold", 8)).grid(row=23, column=5,sticky='w')
-MaxOff.set(8000)
+MaxOff.set(par2[6])
 ########
 Label(root, text="Lines before shot: ",font=("Sans Bold", 8)).grid(row=24, column=2,sticky='w')
 PreNodeLines = DoubleVar()
@@ -254,9 +260,22 @@ Option.set(par1[9])
 ########
 Label(root, text="Vers: ",font=("Sans Bold", 8)).grid(row=27, column=2,sticky=W)
 Version = StringVar()
-Entry(root, width=20, textvariable=Version,font=("Sans Bold", 8)).grid(row=27, column=3,sticky='w')
+Entry(root, width=10, textvariable=Version,font=("Sans Bold", 8)).grid(row=27, column=3,sticky='w')
 Version.set(par1[10])
 ########
+#FOCA!!!!
+########
+Label(root, text="  Record length (s)",font=("Sans Bold", 8)).grid(row=26, column=4,sticky=W)
+rl = StringVar()
+Entry(root, width=10, textvariable=rl,font=("Sans Bold", 8)).grid(row=26, column=5,sticky='w')
+rl.set(par1[14])
+########
+Label(root, text="  Water depth (m) ",font=("Sans Bold", 8)).grid(row=27, column=4,sticky=W)
+wd = StringVar()
+Entry(root, width=10, textvariable=wd,font=("Sans Bold", 8)).grid(row=27, column=5,sticky='w')
+wd.set(par2[14])
+########
+
 #---------------------------------------------NODES PLOT SELECT--------------------------------------------------------
 ########
 var1a = IntVar()
@@ -300,7 +319,6 @@ def rnodes():
  PO=Polyarea(xp,yp)
  ring = LinearRing(X)
  s=Polygon(ring)
-
  global NodeArea
 
  NodeArea=PO.getarea()
@@ -494,9 +512,10 @@ def rshots():
  if nsources==2:
     dxb=dxa/2
     dyb=dya/2
- if nsources==3:
+ if nsources==3:             # TRIPLE SOURCE 
     dxb=dxa/2
     dyb=dya
+    dxb=dxb*nsources
  nxb=int(rangexa/dxb)
  nyb=int(rangeya/dyb)
 
@@ -588,9 +607,9 @@ def rshots():
         sht.write("%7.2f %7.2f %2i %2i\n" % (float(GRIDXX[jj][ii]),float(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
         sail.write("%7.2f %7.2f %2i %2i\n" % (float(GRIDXX[jj][ii]),float(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
       if nsources ==3: 
-        sht.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj][ii]),(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
-        sht.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj+adv][ii+adv]),(GRIDYY[jj+adv][ii+adv]),GRIDLN[jj+adv][ii+adv],GRIDPT[jj+adv][ii+adv]))
-        sht.write("%7.2f %7.2f %2i %2i\n" % ((GRIDXX[jj+adv+1][ii+adv+1]),(GRIDYY[jj+adv+1][ii+adv+1]),GRIDLN[jj+adv+1][ii+adv+1],GRIDPT[jj+adv+1][ii+adv+1]))
+        sht.write("%7.2f %7.2f %2.1f %2.1f\n" % ((GRIDXX[jj][ii]),(GRIDYY[jj][ii]),GRIDLN[jj][ii],GRIDPT[jj][ii]))
+        sht.write("%7.2f %7.2f %2.1f %2.1f\n" % ((GRIDXX[jj+adv][ii+adv]),(GRIDYY[jj+adv][ii+adv]),GRIDLN[jj+adv][ii+adv],GRIDPT[jj+adv][ii+adv]))
+        sht.write("%7.2f %7.2f %2.1f %2.1f\n" % ((GRIDXX[jj+adv+1][ii+adv+1]),(GRIDYY[jj+adv+1][ii+adv+1]),GRIDLN[jj+adv+1][ii+adv+1],GRIDPT[jj+adv+1][ii+adv+1]))
 
 # -------- Loop for sailines 
 
@@ -1202,9 +1221,6 @@ class PB:
         self.__root.update()
         self.__root.focus_set()
 
-
-
-
 #------------------- Call Fold ------------------------------
 def foldm():
  os.system('./fold')
@@ -1251,34 +1267,94 @@ def plot():
  plt.show()
 
 
-#---------------------------------------------------------
-def plot1():
+#---------------------------------------------------------def plot1():
 
-#def plot1():
- fig, ax = plt.subplots(figsize=(10, 8))
- ax.set_title('SHOOTING DIAGRAM  ------    DUAL SOURCE ')
- x1 = np.linspace(0, 1000, 50)
- x2 = np.linspace(0, 1000, 50, endpoint=True)
+def diagram():
+
+ import numpy as np
+ import matplotlib.pyplot as plt
+
+ fig, ax = plt.subplots(figsize=(8, 6))
+
+ ax.set_title('SHOOTING DIAGRAM  ------    SINGLE SOURCE ')
+
+# Major ticks every 20, minor ticks every 5
+ major_ticks = np.arange(0, 1100, 100)
+ minor_ticks = np.arange(0, 1000, 50)
+
+ ax.set_xticks(major_ticks)
+ ax.set_xticks(minor_ticks, minor=True)
+ ax.set_yticks(major_ticks)
+ ax.set_yticks(minor_ticks, minor=True)
+
+# And a corresponding grid
+ ax.grid(which='both')
+
+# Or if you want different settings for the grids:
+ ax.grid(which='minor', alpha=0.2)
+ ax.grid(which='major', alpha=0.5)
+
+ nsources = nfontes.get()
+
+ if nsources == 1:
+  ax.set_title('SHOOTING DIAGRAM  ------    SINGLE SOURCE ')
+
 
 # Vessels
- Shipx=[[150],[350],[550],[750],[950]]
- Shipy=[[1000],[1000],[1000],[1000],[1000]]
- ax.scatter(Shipx,Shipy,s=400,c="blue",alpha=.8,marker="^")
+  Shipx=[[200],[300],[400],[500],[600],[700],[800],[900]]
+  Shipy=[[1000],[1000],[1000],[1000],[1000],[1000],[1000],[1000]]
+  ax.scatter(Shipx,Shipy,s=120,c="blue",alpha=.8,marker="^")
+
+#  Sources
+  pxx= np.array([200,300,400,500,600,700,800,900])
+  Px=np.array([pxx,pxx,pxx,pxx,pxx,pxx,pxx,pxx])
+  Py=[[900,900,900,900,900,900,900,900],
+    [800,800,800,800,800,800,800,800],
+    [700,700,700,700,700,700,700,700],
+    [600,600,600,600,600,600,600,600],
+    [500,500,500,500,500,500,500,500],
+    [400,400,400,400,400,400,400,400],
+    [300,300,300,300,300,300,300,300],
+    [200,200,200,200,200,200,200,200]]
+
+  ax.scatter(Px,Py,s=60,c="black",alpha=.8 )
+
+# Sail Line 
+  y3 = np.transpose([[100,900],[100,900],
+                   [100,900],[100,900],[100,900],
+                   [100,900],[100,900],[100,900]])
+  Vs1 = np.transpose([[200,200],[300,300],
+                    [400,400],[500,500],[600,600],
+                    [700,700],[800,800],[900,900]])
+#PORRA
+
+  ax.plot(Vs1, y3, color='blue', alpha=0.9,linestyle='dashed',
+    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+  plt.show()
+
+ if nsources == 2:
+  ax.set_title('SHOOTING DIAGRAM  ------    DUAL SOURCE ')
+
+
+  ax.grid(which='major', alpha=0.5)# Vessels
+  Shipx=[[150],[350],[550],[750],[950]]
+  Shipy=[[1000],[1000],[1000],[1000],[1000]]
+  ax.scatter(Shipx,Shipy,s=120,c="blue",alpha=.8,marker="^")
 
 # Port and Stb Sources
- pxx= np.array([200,400,600,800,1000])
- Px=np.array([pxx,pxx,pxx,pxx,pxx,pxx,pxx])
- Py=[[750,750,750,750,750],
+  pxx= np.array([200,400,600,800,1000])
+  Px=np.array([pxx,pxx,pxx,pxx,pxx,pxx,pxx])
+  Py=[[750,750,750,750,750],
     [650,650,650,650,650],
     [550,550,550,550,550],
     [450,450,450,450,450],
     [350,350,350,350,350],
     [250,250,250,250,250],
     [150,150,150,150,150]]
-
- sxx = np.array([100,300,500,700,900])
- Sx  = np.array([sxx,sxx,sxx,sxx,sxx,sxx,sxx])
- Sy=[[800,800,800,800,800],
+ 
+  sxx = np.array([100,300,500,700,900])
+  Sx  = np.array([sxx,sxx,sxx,sxx,sxx,sxx,sxx])
+  Sy=[[800,800,800,800,800],
     [700,700,700,700,700],
     [600,600,600,600,600],
     [500,500,500,500,500],
@@ -1286,31 +1362,122 @@ def plot1():
     [300,300,300,300,300],
     [200,200,200,200,200]]
 
- plt.grid()
- ax.scatter(Px,Py,s=50,c="green",alpha=.8 )
- ax.scatter(Sx,Sy,s=50,c="red",alpha=.8)
+  ax.scatter(Px,Py,s=50,c="green",alpha=.8 )
+  ax.scatter(Sx,Sy,s=50,c="red",alpha=.8)
 
 # Port Shooting line
- y = np.transpose([[100,900],[100,900],[100,900],[100,900],[100,900]])
- Lp1 =np.transpose( [[100,100],[300,300],[500,500],[700,700],[900,900]])
- ax.plot(Lp1,y, color='red', alpha=0.9,linestyle='dotted',
+  y = np.transpose([[100,900],[100,900],[100,900],[100,900],[100,900]])
+  Lp1 =np.transpose( [[100,100],[300,300],[500,500],[700,700],[900,900]])
+  ax.plot(Lp1,y, color='red', alpha=0.9,linestyle='dotted',
     linewidth=2, solid_capstyle='round', zorder=1, marker="^")
 
 # Starboard Shooting line
- y1 = np.transpose([[100,900],[100,900],[100,900],[100,900],[100,900]])
- Ls1 = np.transpose([[200,200],[400,400],[600,600],[800,800],[1000,1000]])
- ax.plot(Ls1, y1, color='green', alpha=0.9,linestyle='dotted',
+  y1 = np.transpose([[100,900],[100,900],[100,900],[100,900],[100,900]])
+  Ls1 = np.transpose([[200,200],[400,400],[600,600],[800,800],[1000,1000]])
+  ax.plot(Ls1, y1, color='green', alpha=0.9,linestyle='dotted',
     linewidth=2, solid_capstyle='round', zorder=1, marker="^")
 
 # Sail Line 
- y3 = np.transpose([[100,1000],[100,1000],[100,1000],[100,1000],[100,1000]])
- Vs1 = np.transpose([[150,150],[350,350],[550,550],[750,750],[950,950]])
- ax.plot(Vs1, y3, color='blue', alpha=0.9,linestyle='dashed',
+  y3 = np.transpose([[100,1000],[100,1000],[100,1000],[100,1000],[100,1000]])
+  Vs1 = np.transpose([[150,150],[350,350],[550,550],[750,750],[950,950]])
+  ax.plot(Vs1, y3, color='blue', alpha=0.9,linestyle='dashed',
     linewidth=2, solid_capstyle='round', zorder=1, marker="^")
 
 
- plt.show()
+  plt.show()
 
+ if nsources == 3:
+
+   ax.set_title('SHOOTING DIAGRAM  ------    Triple  SOURCE ')
+
+   ddx = 120
+   xmax = 10*ddx
+   xmin =0
+
+# Major ticks every 20, minor ticks every 5
+   major_ticks = np.arange(0,1200 , 60)
+   minor_ticks = np.arange(0,1200, 300)
+
+   ax.set_xticks(major_ticks)
+   ax.set_xticks(minor_ticks, minor=True)
+   ax.set_yticks(major_ticks)
+   ax.set_yticks(minor_ticks, minor=True)
+
+# And a corresponding grid
+   ax.grid(which='both')
+
+# Or if you want different settings for the grids:
+   ax.grid(which='minor', alpha=0.4)
+   ax.grid(which='major', alpha=0.8)
+
+   plt.text(810, 150, "Sail line space = 180 m", size=9, rotation=0.,
+         ha="center", va="center",bbox=dict(boxstyle="round",
+                   ec=(1., 0.5, 0.5), fc=(1., 0.8, 0.8)))
+
+   plt.text(640, 200, "Pop interval: 20 m", size=9, rotation=90.,
+         ha="center", va="center",bbox=dict(boxstyle="round",
+                   ec=(1., 0.5, 0.5),fc=(1., 0.8, 0.8)))
+# Vessels
+   Shipx = np.arange(180,1080,180)
+   Shipy = np.empty([len(Shipx)])
+   Shipy.fill(600)
+   ax.scatter(Shipx,Shipy,s=120,c="blue",alpha=.8,marker="^")
+
+# Port Source
+   dxshot=60
+   Shoty = np.arange(100, 600,100)
+   Shoty = np.empty([len(Shoty)])
+   Shoty.fill(180)
+   Shotx = Shipx-60
+   for i in range(5):
+       ax.scatter(Shotx,Shoty+(i*dxshot),s=60,c="red",alpha=.8 )
+
+# Center Sources
+   dxshot=60
+   Shoty = np.arange(100, 600,100)
+   Shoty = np.empty([len(Shoty)])
+   Shoty.fill(200)
+   Shotx = Shipx
+   for i in range(5):
+     ax.scatter(Shotx,Shoty+(i*dxshot),s=60,c="black",alpha=.8 )
+
+# SB Source
+   dxshot=60
+   Shoty = np.arange(100, 600,100)
+   Shoty = np.empty([len(Shoty)])
+   Shoty.fill(220)
+   Shotx = Shipx+60
+   for i in range(5):
+     ax.scatter(Shotx,Shoty+(i*dxshot),s=60,c="green",alpha=.8 )
+
+# Port Shooting line
+   ddx =180
+   Liney=[120,540]
+   Linex=np.array([ddx,ddx])-60
+   for j in range(int(xmax/ddx-1)):
+     ax.plot(Linex, Liney, color='red', alpha=0.9,linestyle='dashed',
+     linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+     Linex=Linex + ddx
+
+# Sail Shooting Line 
+   ddx =180
+   Liney=[120,540]
+   Linex=np.array([ddx,ddx])
+   for j in range(int(xmax/ddx-1)):
+     ax.plot(Linex, Liney, color='blue', alpha=0.9,linestyle='dashed',
+     linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+     Linex=Linex + ddx
+
+# SB Shooting Line 
+   ddx =180
+   Liney=[120,540]
+   Linex=np.array([ddx,ddx])+60
+   for j in range(int(xmax/ddx-1)):
+      ax.plot(Linex, Liney, color='green', alpha=0.9,linestyle='dashed',
+      linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+      Linex=Linex + ddx
+
+   plt.show()
 
 #-----------------------------------------------------------------------
 
@@ -1318,7 +1485,7 @@ Button(root,text="Nodes Computation",font=("Sans Bold", 9), command=rnodes).grid
 
 Button(root,text="Full Computation",font=("Sans Bold", 9), command=rshots).grid(row=20, column=5,sticky="w")
 
-Button(root,text="PLOT DIAGRAM ",font=("Sans Bold", 7), command=plot1).grid(row=13, column=0, sticky="w")
+Button(root,text="PLOT DIAGRAM ",font=("Sans Bold", 7), command=diagram).grid(row=13, column=0, sticky="w")
 
 Button(root,text="PLOT GRID      ",font=("Sans Bold", 7), command=plot).grid(row=11, column=0,sticky="w")
 
