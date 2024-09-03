@@ -32,7 +32,7 @@ x y
 308000 500000  
 300000 500000  
 
-### 3- pol3.txt (Optional)
+### 3- pol3.txt (Optional) Since you can expand the pol2.txt by a very smart function
 x y  
 292000 492000  
 292000 516000  
@@ -41,10 +41,9 @@ x y
 292000 492000  
 
 
-
-The output are:
+The output are: ( ALL INPUT in Map function and Folr Function)
 1- shots.txt
-2-nodes.txt
+2- nodes.txt
 3- sail.txt
 4- grid.txt
 
