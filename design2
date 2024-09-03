@@ -863,7 +863,7 @@ def planout ():
  sheet0.write(18,5, "",style4d)                                             # F19
 # sheet0.write(20,6, AvShotKm_1,style4b)                                    # G19
 
- sheet0.write(19,4, "Shot Lines (Km):",style4d)                             # E20
+ sheet0.write(19,4, "Total Linear Km of Shots:",style4d)                             # E20
  sheet0.write(19,5, "",style4d)                                             # F20
 # sheet0.write(19,6, LinearShotKm,style4b)                                  # G20
 
@@ -875,7 +875,7 @@ def planout ():
  sheet0.write(21,5, "",style4d)                                             # E22
 # sheet0.write(21,6, round(TotalShootTimeDays,2),style4b)                   # G22
 
- sheet0.write(22,4, "Shot density / spKm:",style4d)                         # E23
+ sheet0.write(22,4, "Shot density / sqKm:",style4d)                         # E23
  sheet0.write(22,5, "",style4d)                                             # E23
 
  sheet0.write(23,4, "Number of Sail Lines:",style4d)                        # E24
@@ -987,7 +987,6 @@ def planout ():
      if isl not in new_shotline:
         new_shotline.append(isl)
         new_numbershots.append(sline.count(isl))
-        print ("PORRA Number of shots/line", sline.count(isl),isl)
  fsp,lsp = [],[]
  nn=len(spoint)-1
  for iss in range(0,nn):
@@ -1001,13 +1000,13 @@ def planout ():
  new_shotlinedays = []
  new_shotlinehours = []
  for iporra in range(0,len(new_numbershots)):
-      km = (new_numbershots[iporra]-1)*(shotx.get()/1000.)
+      km = (new_numbershots[iporra]-1)*(nfontes.get()*shotx.get()/1000.)
       new_shotlinekm.append(km)
       thours = km/(velshot.get()*1.852)
       tdays = thours/24
       new_shotlinedays.append(tdays)
       new_shotlinehours.append(thours)
-
+ print ("new_shotlinekm", len(new_shotlinekm)*km)
 # Now writing 
  sheet0.write(16,6, sum(new_numbershots),style4b)                              # G17
  sheet0.write(17,6, len(new_shotline),style4b)                                 # G18
@@ -1119,16 +1118,16 @@ def planout ():
       tsaildays = tsailhours/24
       new_saillinedays.append(tsaildays)
       new_saillinehours.append(tsailhours)
-
 # Now writing 
  sheet0.write(23,6, len(new_sailline),style4b)                                 # G24
- sheet0.write(25,6, sum(new_saillinekm)*nfontes.get(),style4b)                               # G25
+### MODIDIEF FOR 3 SOURCES
+ sheet0.write(25,6, sum(new_saillinekm),style4b)                               # G25
  sheet0.write(20,6, round(sum(new_saillinehours),2),style4b)                   # G21
  sheet0.write(21,6, round(sum(new_saillinedays),2),style4b)                    # G22
 
-
- sheet0.write(24,6, round(sum(new_saillinekm*nfontes.get())/len(new_sailline),2),style4b)    # G26
-
+ #### MODIFIED FOR 3  source
+ sheet0.write(24,6, round(sum(new_saillinekm)/len(new_sailline),2),style4b)    # G26
+ print ( "sum(new_saillinekm)/len(new_sailline)",sum(new_saillinekm*nfontes.get())*len(new_sailline))
 
  sheet7.write(0,0, "Line",style9)
  sheet7.write(0,1, "Sail Line",style9)
@@ -1278,134 +1277,35 @@ def diagram():
  import numpy as np
  import matplotlib.pyplot as plt
 
- fig, ax = plt.subplots(figsize=(8, 6))
-
- ax.set_title('SHOOTING DIAGRAM  ------    SINGLE SOURCE ')
-
-# Major ticks every 20, minor ticks every 5
- major_ticks = np.arange(0, 1100, 100)
- minor_ticks = np.arange(0, 1000, 50)
-
- ax.set_xticks(major_ticks)
- ax.set_xticks(minor_ticks, minor=True)
- ax.set_yticks(major_ticks)
- ax.set_yticks(minor_ticks, minor=True)
-
-# And a corresponding grid
- ax.grid(which='both')
-
-# Or if you want different settings for the grids:
- ax.grid(which='minor', alpha=0.2)
- ax.grid(which='major', alpha=0.5)
-
  nsources = nfontes.get()
 
- if nsources == 1:
-  ax.set_title('SHOOTING DIAGRAM  ------    SINGLE SOURCE ')
-
-
-# Vessels
-  Shipx=[[200],[300],[400],[500],[600],[700],[800],[900]]
-  Shipy=[[1000],[1000],[1000],[1000],[1000],[1000],[1000],[1000]]
-  ax.scatter(Shipx,Shipy,s=120,c="blue",alpha=.8,marker="^")
-
-#  Sources
-  pxx= np.array([200,300,400,500,600,700,800,900])
-  Px=np.array([pxx,pxx,pxx,pxx,pxx,pxx,pxx,pxx])
-  Py=[[900,900,900,900,900,900,900,900],
-    [800,800,800,800,800,800,800,800],
-    [700,700,700,700,700,700,700,700],
-    [600,600,600,600,600,600,600,600],
-    [500,500,500,500,500,500,500,500],
-    [400,400,400,400,400,400,400,400],
-    [300,300,300,300,300,300,300,300],
-    [200,200,200,200,200,200,200,200]]
-
-  ax.scatter(Px,Py,s=60,c="black",alpha=.8 )
-
-# Sail Line 
-  y3 = np.transpose([[100,900],[100,900],
-                   [100,900],[100,900],[100,900],
-                   [100,900],[100,900],[100,900]])
-  Vs1 = np.transpose([[200,200],[300,300],
-                    [400,400],[500,500],[600,600],
-                    [700,700],[800,800],[900,900]])
-#PORRA
-
-  ax.plot(Vs1, y3, color='blue', alpha=0.9,linestyle='dashed',
-    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
-  plt.show()
-
  if nsources == 2:
-  ax.set_title('SHOOTING DIAGRAM  ------    DUAL SOURCE ')
 
+   fig, ax = plt.subplots(figsize=(10, 8))
+   ax.set_title('SHOOTING DIAGRAM  ------    DUAL  SOURCE ')
 
-  ax.grid(which='major', alpha=0.5)# Vessels
-  Shipx=[[150],[350],[550],[750],[950]]
-  Shipy=[[1000],[1000],[1000],[1000],[1000]]
-  ax.scatter(Shipx,Shipy,s=120,c="blue",alpha=.8,marker="^")
+   ddx = shoty.get()              # Lateral distance between two array centers
+   pop = shotx.get()              # In line poop interval
+   xshot = 2*pop        # Shot Point Interval
+   xsail = 4*ddx         # Sail Line Interval
 
-# Port and Stb Sources
-  pxx= np.array([200,400,600,800,1000])
-  Px=np.array([pxx,pxx,pxx,pxx,pxx,pxx,pxx])
-  Py=[[750,750,750,750,750],
-    [650,650,650,650,650],
-    [550,550,550,550,550],
-    [450,450,450,450,450],
-    [350,350,350,350,350],
-    [250,250,250,250,250],
-    [150,150,150,150,150]]
- 
-  sxx = np.array([100,300,500,700,900])
-  Sx  = np.array([sxx,sxx,sxx,sxx,sxx,sxx,sxx])
-  Sy=[[800,800,800,800,800],
-    [700,700,700,700,700],
-    [600,600,600,600,600],
-    [500,500,500,500,500],
-    [400,400,400,400,400],
-    [300,300,300,300,300],
-    [200,200,200,200,200]]
-
-  ax.scatter(Px,Py,s=50,c="green",alpha=.8 )
-  ax.scatter(Sx,Sy,s=50,c="red",alpha=.8)
-
-# Port Shooting line
-  y = np.transpose([[100,900],[100,900],[100,900],[100,900],[100,900]])
-  Lp1 =np.transpose( [[100,100],[300,300],[500,500],[700,700],[900,900]])
-  ax.plot(Lp1,y, color='red', alpha=0.9,linestyle='dotted',
-    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
-
-# Starboard Shooting line
-  y1 = np.transpose([[100,900],[100,900],[100,900],[100,900],[100,900]])
-  Ls1 = np.transpose([[200,200],[400,400],[600,600],[800,800],[1000,1000]])
-  ax.plot(Ls1, y1, color='green', alpha=0.9,linestyle='dotted',
-    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
-
-# Sail Line 
-  y3 = np.transpose([[100,1000],[100,1000],[100,1000],[100,1000],[100,1000]])
-  Vs1 = np.transpose([[150,150],[350,350],[550,550],[750,750],[950,950]])
-  ax.plot(Vs1, y3, color='blue', alpha=0.9,linestyle='dashed',
-    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
-
-
-  plt.show()
-
- if nsources == 3:
-
-   ax.set_title('SHOOTING DIAGRAM  ------    Triple  SOURCE ')
-
-   ddx = 120
-   xmax = 10*ddx
-   xmin =0
+# Plot parameters
+   nshots = 6
+   xmax = xsail*nshots        # Plot X max length
+   ymax = xshot*nshots-pop    # Plot Y max length
+   ymin = pop
+   nn = nshots -1                 # Number of shots to plot
 
 # Major ticks every 20, minor ticks every 5
-   major_ticks = np.arange(0,1200 , 60)
-   minor_ticks = np.arange(0,1200, 300)
+   major_ticksx = np.arange(0,xmax , xshot)
+   minor_ticksx = np.arange(0,xmax, pop)
+   major_ticksy = np.arange(0,ymax , xshot)
+   minor_ticksy = np.arange(0,ymax, pop)
 
-   ax.set_xticks(major_ticks)
-   ax.set_xticks(minor_ticks, minor=True)
-   ax.set_yticks(major_ticks)
-   ax.set_yticks(minor_ticks, minor=True)
+   ax.set_xticks(major_ticksx)
+   ax.set_xticks(minor_ticksx, minor=True)
+   ax.set_yticks(major_ticksy)
+   ax.set_yticks(minor_ticksy, minor=True)
 
 # And a corresponding grid
    ax.grid(which='both')
@@ -1413,73 +1313,158 @@ def diagram():
 # Or if you want different settings for the grids:
    ax.grid(which='minor', alpha=0.4)
    ax.grid(which='major', alpha=0.8)
-
-   plt.text(810, 150, "Sail line space = 180 m", size=9, rotation=0.,
-         ha="center", va="center",bbox=dict(boxstyle="round",
-                   ec=(1., 0.5, 0.5), fc=(1., 0.8, 0.8)))
-
-   plt.text(640, 200, "Pop interval: 20 m", size=9, rotation=90.,
-         ha="center", va="center",bbox=dict(boxstyle="round",
-                   ec=(1., 0.5, 0.5),fc=(1., 0.8, 0.8)))
+#---------------------------------------------------------
+##plt.text(795, 560,"Sail line space = ", size=9, rotation=0.,
+##         ha="center", va="center",bbox=dict(boxstyle="round",
+##                   ec=(1., 0.5, 0.5), fc=(1., 0.8, 0.8)))
+##
+##plt.text(640, 200, "Pop interval: 20 m", size=9, rotation=90.,
+##         ha="center", va="center",bbox=dict(boxstyle="round",
+##                   ec=(1., 0.5, 0.5),fc=(1., 0.8, 0.8)))
 # Vessels
-   Shipx = np.arange(180,1080,180)
+   Shipx = np.arange(xsail,xmax,xsail)
    Shipy = np.empty([len(Shipx)])
-   Shipy.fill(600)
+   Shipy.fill(ymax-pop)
    ax.scatter(Shipx,Shipy,s=120,c="blue",alpha=.8,marker="^")
-
+   Shoty = np.arange(100,ymax,100)
 # Port Source
-   dxshot=60
-   Shoty = np.arange(100, 600,100)
-   Shoty = np.empty([len(Shoty)])
-   Shoty.fill(180)
-   Shotx = Shipx-60
-   for i in range(5):
-       ax.scatter(Shotx,Shoty+(i*dxshot),s=60,c="red",alpha=.8 )
-
+   Shotx = np.empty([len(Shoty)])
+   Shoty.fill(ymin)
+   Shotx.fill(xsail)
+   for j in range(len(Shipx)):
+    for i in range(nn-1):
+     ax.scatter(j*xsail+Shotx-ddx,Shoty+i*xshot,s=40,c="red",alpha=.8 )
 # Center Sources
-   dxshot=60
-   Shoty = np.arange(100, 600,100)
-   Shoty = np.empty([len(Shoty)])
-   Shoty.fill(200)
-   Shotx = Shipx
-   for i in range(5):
-     ax.scatter(Shotx,Shoty+(i*dxshot),s=60,c="black",alpha=.8 )
-
+##Shotx = np.empty([len(Shoty)])
+##Shoty.fill(ymin)
+###Shotx.fill(xsail)
+##for j in range(len(Shipx)):
+## for i in range(nn-1):
+##     ax.scatter(j*xsail+Shotx,Shoty+i*xshot+pop,s=40,c="blue",alpha=.8 )
 # SB Source
-   dxshot=60
-   Shoty = np.arange(100, 600,100)
    Shoty = np.empty([len(Shoty)])
-   Shoty.fill(220)
-   Shotx = Shipx+60
-   for i in range(5):
-     ax.scatter(Shotx,Shoty+(i*dxshot),s=60,c="green",alpha=.8 )
-
+   Shoty.fill(ymin)
+   Shotx.fill(xsail)
+   for j in range(len(Shipx)):
+    for i in range(nn-1):
+     ax.scatter(j*xsail+Shotx+ddx,Shoty+i*xshot+pop,s=40,c="green",alpha=.8 )
+######------------------------------------------------------------------------------------
+   Liney=[0,ymax-xshot]
 # Port Shooting line
-   ddx =180
-   Liney=[120,540]
-   Linex=np.array([ddx,ddx])-60
-   for j in range(int(xmax/ddx-1)):
+   Linex=np.array([xsail,xsail])-ddx
+   for j in range(nn): 
      ax.plot(Linex, Liney, color='red', alpha=0.9,linestyle='dashed',
      linewidth=2, solid_capstyle='round', zorder=1, marker="^")
-     Linex=Linex + ddx
-
+     Linex=Linex + xsail
 # Sail Shooting Line 
-   ddx =180
-   Liney=[120,540]
-   Linex=np.array([ddx,ddx])
-   for j in range(int(xmax/ddx-1)):
-     ax.plot(Linex, Liney, color='blue', alpha=0.9,linestyle='dashed',
-     linewidth=2, solid_capstyle='round', zorder=1, marker="^")
-     Linex=Linex + ddx
+   Linex=np.array([xsail,xsail])
+   for j in range(nn): 
+    ax.plot(Linex, Liney, color='blue', alpha=0.9,linestyle='dashed',
+    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+    Linex=Linex + xsail
+# SB Shooting Line
+   Linex=np.array([xsail,xsail])+ddx
+   for j in range(nn): 
+    ax.plot(Linex, Liney, color='green', alpha=0.9,linestyle='dashed',
+    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+    Linex=Linex + xsail
 
-# SB Shooting Line 
-   ddx =180
-   Liney=[120,540]
-   Linex=np.array([ddx,ddx])+60
-   for j in range(int(xmax/ddx-1)):
-      ax.plot(Linex, Liney, color='green', alpha=0.9,linestyle='dashed',
-      linewidth=2, solid_capstyle='round', zorder=1, marker="^")
-      Linex=Linex + ddx
+   plt.show()
+
+#---------------------------------------------------------------------------------------
+ nsources = nfontes.get()
+ if nsources == 3:
+
+   fig, ax = plt.subplots(figsize=(10, 8))
+
+   ax.set_title('SHOOTING DIAGRAM  ------    Triple  SOURCE ')
+
+   ddx = shoty.get()              # Lateral distance between two array centers
+   pop = shotx.get()              # In line poop interval
+   xshot = 3.*pop        # Shot Point Interval
+   yshot = ddx           # Yshot = ddx 
+   xsail = 3*ddx         # Sail Line Interval
+
+# Plot parameters
+   nshots = 6
+   xmax = xsail*nshots        # Plot X max length
+   ymax = xshot*nshots-pop    # Plot Y max length
+   ymin = pop
+   nn = nshots -1                 # Number of shots to plot
+
+# Major ticks every 20, minor ticks every 5
+   major_ticksx = np.arange(0,xmax , xshot)
+   minor_ticksx = np.arange(0,xmax, pop)
+   major_ticksy = np.arange(0,ymax , xshot)
+   minor_ticksy = np.arange(0,ymax, pop)
+
+   ax.set_xticks(major_ticksx)
+   ax.set_xticks(minor_ticksx, minor=True)
+   ax.set_yticks(major_ticksy)
+   ax.set_yticks(minor_ticksy, minor=True)
+
+# And a corresponding grid
+   ax.grid(which='both')
+
+# Or if you want different settings for the grids:
+   ax.grid(which='minor', alpha=0.4)
+   ax.grid(which='major', alpha=0.8)
+#---------------------------------------------------------
+##   plt.text(795, 560,"Sail line space = ", size=9, rotation=0.,
+##         ha="center", va="center",bbox=dict(boxstyle="round",
+##                   ec=(1., 0.5, 0.5), fc=(1., 0.8, 0.8)))
+##
+##   plt.text(640, 200, "Pop interval: 20 m", size=9, rotation=90.,
+##         ha="center", va="center",bbox=dict(boxstyle="round",
+##                   ec=(1., 0.5, 0.5),fc=(1., 0.8, 0.8)))
+# Vessels
+   Shipx = np.arange(xsail,xmax,xsail)
+   Shipy = np.empty([len(Shipx)])
+   Shipy.fill(ymax-pop)
+   ax.scatter(Shipx,Shipy,s=120,c="blue",alpha=.8,marker="^")
+   Shoty = np.arange(100,ymax,100)
+# Port Source
+   Shotx = np.empty([len(Shoty)])
+   Shoty.fill(ymin)
+   Shotx.fill(xsail)
+   for j in range(len(Shipx)):
+    for i in range(nn-1):
+     ax.scatter(j*xsail+Shotx-xshot,Shoty+i*xshot,s=40,c="red",alpha=.8 )
+# Center Sources
+   Shotx = np.empty([len(Shoty)])
+   Shoty.fill(ymin)
+   Shotx.fill(xsail)
+   for j in range(len(Shipx)):
+    for i in range(nn-1):
+     ax.scatter(j*xsail+Shotx,Shoty+i*xshot+pop,s=40,c="blue",alpha=.8 )
+# SB Source
+   Shoty = np.empty([len(Shoty)])
+   Shoty.fill(ymin)
+   Shotx.fill(xsail)
+   for j in range(len(Shipx)):
+    for i in range(nn-1):
+     ax.scatter(j*xsail+Shotx+xshot,Shoty+i*xshot+2*pop,s=40,c="green",alpha=.8 )
+######------------------------------------------------------------------------------------
+   Liney=[0,ymax-xshot]
+# Port Shooting line
+   Linex=np.array([xsail,xsail])-xshot
+   for j in range(nn): 
+    ax.plot(Linex, Liney, color='red', alpha=0.9,linestyle='dashed',
+    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+    Linex=Linex + xsail
+# Sail Shooting Line 
+   Linex=np.array([xsail,xsail])
+   for j in range(nn): 
+    ax.plot(Linex, Liney, color='blue', alpha=0.9,linestyle='dashed',
+    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+    Linex=Linex + xsail
+# SB Shooting Line
+   Linex=np.array([xsail,xsail])+xshot
+   for j in range(nn): 
+    ax.plot(Linex, Liney, color='green', alpha=0.9,linestyle='dashed',
+    linewidth=2, solid_capstyle='round', zorder=1, marker="^")
+    Linex=Linex + xsail
+
 
    plt.show()
 
