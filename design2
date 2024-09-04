@@ -380,7 +380,7 @@ def rnodes():
 ###
 
  LineNumber=[]
- NodeNumber=[]
+ ###NodeNumber=[]
  FNL=[]
  LNL=[]
  savenode =0
@@ -399,6 +399,7 @@ def rnodes():
       NumberofNodes+=1     # count all nodes in and on the node polygon
       XX.append(float(x[k][l]))
       YY.append(float(y[k][l]))
+
       aax=x[k][l]
       aay=y[k][l]
       if flagnode==0:
@@ -822,7 +823,6 @@ def planout ():
 
 
 #Shots
-
  nsources = nfontes.get()
  dxa=2*shotx.get()
  dya=shoty.get()
@@ -928,9 +928,6 @@ def planout ():
          sheet1.write(row,7,round(((LNL[Inode]-FNL[Inode])*(dx/nodevel))/24,3),style4b)
          row+=1
 
-# sheet1.write(row,1, "",style6)
-# sheet1.write(row,2, "",style6)
-# sheet1.write(row,3, "",style6)
 
  s=""
  value=str(row)
@@ -1114,10 +1111,11 @@ def planout ():
  for ip in range(0,len(new_sailpoint)):
       kmsail = nfontes.get()*(new_sailpoint[ip]-1)*(shotx.get()/1000.)
       new_saillinekm.append(kmsail)
-      tsailhours = kmsail/(velshot.get()*1.852)
+      tsailhours = chglinetime.get()+kmsail/(velshot.get()*1.852)
       tsaildays = tsailhours/24
-      new_saillinedays.append(tsaildays)
       new_saillinehours.append(tsailhours)
+      new_saillinedays.append(tsaildays)
+
 # Now writing 
  sheet0.write(23,6, len(new_sailline),style4b)                                 # G24
 ### MODIDIEF FOR 3 SOURCES
@@ -1410,13 +1408,28 @@ def diagram():
    ax.grid(which='minor', alpha=0.4)
    ax.grid(which='major', alpha=0.8)
 #---------------------------------------------------------
-##   plt.text(795, 560,"Sail line space = ", size=9, rotation=0.,
-##         ha="center", va="center",bbox=dict(boxstyle="round",
-##                   ec=(1., 0.5, 0.5), fc=(1., 0.8, 0.8)))
-##
-##   plt.text(640, 200, "Pop interval: 20 m", size=9, rotation=90.,
-##         ha="center", va="center",bbox=dict(boxstyle="round",
-##                   ec=(1., 0.5, 0.5),fc=(1., 0.8, 0.8)))
+#  PUTA
+   factor = 1000./3600.
+   knots = 1.852*factor   
+   vell= velshot.get()*knots
+   ttime= float(round(pop/vell,2))
+   timel=str(ttime)
+   binx=str(float(round(nfontes.get()*shotx.get()/2,2)))
+   biny=str(float(round(yshot/2,2)))
+   saill=str(float(nfontes.get()*shoty.get()))
+
+   plt.text(5*xsail-xsail/5, xshot/5,"BinX x BinY : "+binx+" x "+biny+" m", size=9, rotation=0.,
+         ha="center", va="center",bbox=dict(boxstyle="round",
+                   ec=(1., 0.5, 0.5), fc=(1.0, 0.9, 0.8)))
+
+   plt.text(5*xsail-xsail/5, xshot/5+xshot/3, "Sail Line Interval: "+saill+" m", size=9, rotation=0.,
+         ha="center", va="center",bbox=dict(boxstyle="round",
+                   ec=(1., 0.5, 0.5),fc=(1.0, 0.9, 0.8)))
+
+   plt.text(5*xsail-xsail/5, xshot/5+2*xshot/3, "Max Unblended time: "+timel+" s", size=9, rotation=0.,
+         ha="center", va="center",bbox=dict(boxstyle="round",
+                   ec=(1., 0.5, 0.5),fc=(1.0, 0.9, 0.8)))
+
 # Vessels
    Shipx = np.arange(xsail,xmax,xsail)
    Shipy = np.empty([len(Shipx)])
