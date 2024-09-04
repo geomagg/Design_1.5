@@ -1277,6 +1277,7 @@ def diagram():
 
  nsources = nfontes.get()
 
+#-----DUAL SOURCE---------------------------------------------------------------------
  if nsources == 2:
 
    fig, ax = plt.subplots(figsize=(10, 8))
@@ -1286,6 +1287,7 @@ def diagram():
    pop = shotx.get()              # In line poop interval
    xshot = 2*pop        # Shot Point Interval
    xsail = 4*ddx         # Sail Line Interval
+   yshot = ddx           # Yshot = ddx 
 
 # Plot parameters
    nshots = 6
@@ -1312,13 +1314,27 @@ def diagram():
    ax.grid(which='minor', alpha=0.4)
    ax.grid(which='major', alpha=0.8)
 #---------------------------------------------------------
-##plt.text(795, 560,"Sail line space = ", size=9, rotation=0.,
-##         ha="center", va="center",bbox=dict(boxstyle="round",
-##                   ec=(1., 0.5, 0.5), fc=(1., 0.8, 0.8)))
-##
-##plt.text(640, 200, "Pop interval: 20 m", size=9, rotation=90.,
-##         ha="center", va="center",bbox=dict(boxstyle="round",
-##                   ec=(1., 0.5, 0.5),fc=(1., 0.8, 0.8)))
+   factor = 1000./3600.
+   knots = 1.852*factor   
+   vell= velshot.get()*knots
+   extra=float(wd.get())/1500.
+   ttime= round(float(pop/vell+extra),2)
+   timel=str(ttime)
+   binx=str(float(round(nfontes.get()*shotx.get()/2,2)))
+   biny=str(float(round(nfontes.get()*yshot/2,2)))
+   saill=str(float(4*shoty.get()))
+
+   plt.text(5*xsail-xsail/5, xshot/5,"BinX x BinY : "+binx+" x "+biny+" m", size=9, rotation=0.,
+         ha="center", va="center",bbox=dict(boxstyle="round",
+                   ec=(1., 0.5, 0.5), fc=(1.0, 0.9, 0.8)))
+
+   plt.text(5*xsail-xsail/5, xshot/5+xshot/3, "Sail Line Interval: "+saill+" m", size=9, rotation=0.,
+         ha="center", va="center",bbox=dict(boxstyle="round",
+                   ec=(1., 0.5, 0.5),fc=(1.0, 0.9, 0.8)))
+
+   plt.text(5*xsail-xsail/5, xshot/5+2*xshot/3, "Max Unblended time: "+timel+" s", size=9, rotation=0.,
+         ha="center", va="center",bbox=dict(boxstyle="round",
+                   ec=(1., 0.5, 0.5),fc=(1.0, 0.9, 0.8)))
 # Vessels
    Shipx = np.arange(xsail,xmax,xsail)
    Shipy = np.empty([len(Shipx)])
@@ -1332,13 +1348,6 @@ def diagram():
    for j in range(len(Shipx)):
     for i in range(nn-1):
      ax.scatter(j*xsail+Shotx-ddx,Shoty+i*xshot,s=40,c="red",alpha=.8 )
-# Center Sources
-##Shotx = np.empty([len(Shoty)])
-##Shoty.fill(ymin)
-###Shotx.fill(xsail)
-##for j in range(len(Shipx)):
-## for i in range(nn-1):
-##     ax.scatter(j*xsail+Shotx,Shoty+i*xshot+pop,s=40,c="blue",alpha=.8 )
 # SB Source
    Shoty = np.empty([len(Shoty)])
    Shoty.fill(ymin)
@@ -1369,7 +1378,7 @@ def diagram():
 
    plt.show()
 
-#---------------------------------------------------------------------------------------
+#--TRIPLE SOURCE--------------------------------------------------------------------------------
  nsources = nfontes.get()
  if nsources == 3:
 
@@ -1408,7 +1417,7 @@ def diagram():
    ax.grid(which='minor', alpha=0.4)
    ax.grid(which='major', alpha=0.8)
 #---------------------------------------------------------
-#  PUTA
+#  PORRA TRIPLE SOURCE
    factor = 1000./3600.
    knots = 1.852*factor   
    vell= velshot.get()*knots
